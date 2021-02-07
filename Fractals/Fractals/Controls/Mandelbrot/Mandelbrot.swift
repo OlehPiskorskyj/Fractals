@@ -27,6 +27,10 @@ class Mandelbrot: MTKView {
     
     // MARK: - consts
     public struct Consts {
+        static let FRACTAL_SIZE =                                   300
+        static let FRACTAL_MAX_VERTICES =                           FRACTAL_SIZE * FRACTAL_SIZE * 4
+        static let FRACTAL_MAX_INDICES =                            FRACTAL_MAX_VERTICES * 3
+        
         static let STROKE_WIDTH_MIN: Float =                        0.6                 // stroke width determined by touch velocity
         static let STROKE_WIDTH_MAX: Float =                        6.0
         static let STROKE_WIDTH_SMOOTHING: Float =                  0.3                 // low pass filter alpha
@@ -37,11 +41,13 @@ class Mandelbrot: MTKView {
     }
     
     // MARK: - enums
+    /*
     public enum VertexType: Int {
         case signature
         case startEnd
     }
- 
+    */
+    
     // MARK: - props
     private var mDevice: MTLDevice!
     private var mCommandQueue: MTLCommandQueue!
@@ -51,15 +57,12 @@ class Mandelbrot: MTKView {
     private var mUniformBuffer: MTLBuffer!
     
     private var mSignatureVerticesBuffer: MTLBuffer!
-    private var mStartEndVerticesBuffer: MTLBuffer!
     private var mTexture: MTLTexture? = nil
     
     private var mPanGestureRecogniser: UIPanGestureRecognizer? = nil
-    private var mTapGestureRecogniser: UITapGestureRecognizer? = nil
     private var mCurrentOrientation: UIDeviceOrientation = .unknown
     
     private var mSignatureVerticesCount = 0
-    private var mStartEndVerticesCount = 0
     
     private var mPreviousThickness: Float = 0.0
     private var mPenThickness: Float = 0.0
@@ -69,6 +72,19 @@ class Mandelbrot: MTKView {
     private var mPreviousPoint: CGPoint!
     
     private var mIsUpdateWithOrientation: Bool = false
+    
+    
+    
+    private var mFractalPointRealPart: Double = 0.0
+    private var mFractalPointImaginePart: Double = 0.0
+    private var mFractalNewRealPart: Double = 0.0
+    private var mFractalNewImaginePart: Double = 0.0
+    private var mFractalOldRealPart: Double = 0.0
+    private var mFractalOldImaginePart: Double = 0.0
+    private var mFractalZoom: Double = 0.0
+    private var mFractalX: Double = 0.0
+    private var mFractalY: Double = 0.0
+    private var mFractalIterationsCount: Int = 0
     
     // MARK: - ctors
     override public init(frame frameRect: CGRect, device: MTLDevice?) {
@@ -106,9 +122,8 @@ class Mandelbrot: MTKView {
             mPreviousVertex = startPoint
             mPreviousThickness = mPenThickness
             
-            self.addVertex(vertex: &startPoint, type: .signature)
-            self.addVertex(vertex: &mPreviousVertex, type: .signature)
-            self.addStartEndPoint(center: &startPoint, width: mPenThickness)
+            self.addVertex(vertex: &startPoint)
+            self.addVertex(vertex: &mPreviousVertex)
             
         } else if (p.state == .changed) {
             let mid = CGPoint(x: (l.x + mPreviousPoint.x) / 2.0, y: (l.y + mPreviousPoint.y) / 2.0)
@@ -147,30 +162,17 @@ class Mandelbrot: MTKView {
             self.addTriangleStripPoints(previous: &mPreviousVertex, next: &vertex)
             mPreviousVertex = vertex
             self.addTriangleStripPoints(previous: &mPreviousVertex, next: &vertex)
-            self.addStartEndPoint(center: &vertex, width: mPenThickness)
         }
         
         self.setNeedsDisplay()
     }
     
-    @objc func tap(t: UITapGestureRecognizer) {
-        let l = t.location(in: self)
-        var vertex = Vertex(x: GLfloat(l.x), y: GLfloat(self.bounds.size.height - l.y), z: 0)
-        self.addStartEndPoint(center: &vertex, width: Consts.STROKE_WIDTH_MAX)
-        self.setNeedsDisplay()
-    }
-    
     // MARK: - vertex math utility methods
-    private func addVertex(vertex: inout Vertex, type: VertexType) {
+    private func addVertex(vertex: inout Vertex) {
         if (mSignatureVerticesCount < Consts.MAXIMUM_VERTICES) {
             let vertexSize = MemoryLayout<Vertex>.size
-            if (type == .signature) {
-                memcpy(mSignatureVerticesBuffer.contents() + vertexSize * mSignatureVerticesCount, &vertex, vertexSize)
-                mSignatureVerticesCount += 1
-            } else if (type == .startEnd) {
-                memcpy(mStartEndVerticesBuffer.contents() + vertexSize * mStartEndVerticesCount, &vertex, vertexSize)
-                mStartEndVerticesCount += 1
-            }
+            memcpy(mSignatureVerticesBuffer.contents() + vertexSize * mSignatureVerticesCount, &vertex, vertexSize)
+            mSignatureVerticesCount += 1
         }
     }
     
@@ -190,23 +192,9 @@ class Mandelbrot: MTKView {
             difY = difY * ratio
             
             var stripPoint = Vertex(x: p1.x + difX, y: p1.y + difY, z: 0)
-            self.addVertex(vertex: &stripPoint, type: .signature)
+            self.addVertex(vertex: &stripPoint)
             
             toTravel *= -1
-        }
-    }
-    
-    private func addStartEndPoint(center: inout Vertex, width: Float) {
-        let deg2rad: Float = 3.14159265 / 180.0
-        var i: Int = 0
-        while i <= 360 {
-            var a = Vertex(x: center.x, y: center.y, z: 0)
-            var b = Vertex(x: center.x + cos(Float(i) * deg2rad) * width / 2.5, y: center.y + sin(Float(i) * deg2rad) * width / 2.5, z: 0)
-            var c = Vertex(x: center.x + cos(Float(i + 20) * deg2rad) * width / 2.5, y: center.y + sin(Float(i + 20) * deg2rad) * width / 2.5, z: 0)
-            self.addVertex(vertex: &a, type: .startEnd)
-            self.addVertex(vertex: &b, type: .startEnd)
-            self.addVertex(vertex: &c, type: .startEnd)
-            i += 20
         }
     }
     
@@ -228,12 +216,11 @@ class Mandelbrot: MTKView {
     }
     
     public func isEmpty() -> Bool {
-        return (mSignatureVerticesCount == 0 && mStartEndVerticesCount == 0)
+        return (mSignatureVerticesCount == 0)
     }
     
     public func tearDownMetal() {
         mSignatureVerticesBuffer = nil
-        mStartEndVerticesBuffer = nil
         mTexture = nil
     }
     
@@ -251,6 +238,129 @@ class Mandelbrot: MTKView {
         }
     }
     
+    // MARK: - fractal logic
+    func createMandelbrot() {
+        /*
+        mAngle = 0.33f;
+        mIndexCount = 0;
+        mVertexCount = 0;
+        
+        mFractalZoom = 1;
+        mFractalX = -0.5;
+        mFractalY = 0.0;
+        mFractalIterationsCount = 250;
+        
+        float delta = 1.0f / FRACTAL_SIZE;
+        
+        for (int x = 0; x < FRACTAL_SIZE; x++)
+        {
+            for (int y = 0; y < FRACTAL_SIZE; y++)
+            {
+                int v1m = [self mandelbrotWithX:x Y:y + 1];
+                int v2m = [self mandelbrotWithX:x Y:y];
+                int v3m = [self mandelbrotWithX:x + 1 Y:y + 1];
+                int v4m = [self mandelbrotWithX:x + 1 Y:y];
+                
+                Vertex v1 = {{
+                    x * delta,
+                    v1m / 255.0f,
+                    (y + 1) * delta
+                },
+                    {1.0f, 1.0f, 1.0f, 1.0f},
+                    {0.0f, 0.0f}};
+                [self addColorToVertex:&v1 MandelbrotN:v1m];
+                Vertex v2 = {{
+                    x * delta,
+                    v2m / 255.0f,
+                    y * delta
+                },
+                    {1.0f, 1.0f, 1.0f, 1.0f},
+                    {0.0f, 0.0f}};
+                [self addColorToVertex:&v2 MandelbrotN:v2m];
+                Vertex v3 = {{
+                    (x + 1) * delta,
+                    v3m / 255.0f,
+                    (y + 1) * delta
+                },
+                    {1.0f, 1.0f, 1.0f, 1.0f},
+                    {0.0f, 0.0f}};
+                [self addColorToVertex:&v3 MandelbrotN:v3m];
+                Vertex v4 = {{
+                    (x + 1) * delta,
+                    v4m / 255.0f,
+                    y * delta
+                },
+                    {1.0f, 1.0f, 1.0f, 1.0f},
+                    {0.0f, 0.0f}};
+                [self addColorToVertex:&v4 MandelbrotN:v4m];
+                
+                GLuint index1 = mVertexCount;
+                GLuint index2 = mVertexCount + 1;
+                GLuint index3 = mVertexCount + 1;
+                GLuint index4 = mVertexCount + 2;
+                GLuint index5 = mVertexCount + 2;
+                GLuint index6 = mVertexCount;
+                
+                GLuint index7 = mVertexCount + 1;
+                GLuint index8 = mVertexCount + 3;
+                GLuint index9 = mVertexCount + 3;
+                GLuint index10 = mVertexCount + 2;
+                GLuint index11 = mVertexCount + 2;
+                GLuint index12 = mVertexCount + 1;
+                
+                [self addIndex:&index1];
+                [self addIndex:&index2];
+                [self addIndex:&index3];
+                [self addIndex:&index4];
+                [self addIndex:&index5];
+                [self addIndex:&index6];
+                
+                [self addIndex:&index7];
+                [self addIndex:&index8];
+                [self addIndex:&index9];
+                [self addIndex:&index10];
+                [self addIndex:&index11];
+                [self addIndex:&index12];
+                
+                [self addVertex:&v1];
+                [self addVertex:&v2];
+                [self addVertex:&v3];
+                [self addVertex:&v4];
+            }
+        }
+        */
+    }
+
+    func mandelbrot(x: Int, y: Int) -> Int {
+        // calculate the initial real and imaginary part of z, based on the pixel location and zoom and position values
+        mFractalPointRealPart = 1.5 * Double(x - Consts.FRACTAL_SIZE / 2) / (0.5 * mFractalZoom * Double(Consts.FRACTAL_SIZE)) + mFractalX
+        mFractalPointImaginePart = Double(y - Consts.FRACTAL_SIZE / 2) / (0.5 * mFractalZoom * Double(Consts.FRACTAL_SIZE)) + mFractalY
+        mFractalNewRealPart = 0.0
+        mFractalNewImaginePart = 0.0
+        mFractalOldRealPart = 0.0
+        mFractalOldImaginePart = 0.0
+        
+        // "i" will represent the number of iterations
+        var iterations = 0
+        
+        //start the iteration process
+        for i in 0..<mFractalIterationsCount {
+            iterations = i
+            //remember value of previous iteration
+            mFractalOldRealPart = mFractalNewRealPart;
+            mFractalOldImaginePart = mFractalNewImaginePart;
+            //the actual iteration, the real and imaginary part are calculated
+            mFractalNewRealPart = mFractalOldRealPart * mFractalOldRealPart - mFractalOldImaginePart * mFractalOldImaginePart + mFractalPointRealPart;
+            mFractalNewImaginePart = 2 * mFractalOldRealPart * mFractalOldImaginePart + mFractalPointImaginePart;
+            //if the point is outside the circle with radius 2: stop
+            if ((mFractalNewRealPart * mFractalNewRealPart + mFractalNewImaginePart * mFractalNewImaginePart) > 4) {
+                break
+            }
+        }
+        
+        return iterations
+    }
+    
     // MARK: - other methods
     private func internalInit() {
         self.enableSetNeedsDisplay = true
@@ -266,12 +376,6 @@ class Mandelbrot: MTKView {
         mPanGestureRecogniser!.minimumNumberOfTouches = 1
         self.addGestureRecognizer(mPanGestureRecogniser!)
         
-        mTapGestureRecogniser = UITapGestureRecognizer()
-        mTapGestureRecogniser!.addTarget(self, action: #selector(tap))
-        mTapGestureRecogniser!.numberOfTapsRequired = 1
-        mTapGestureRecogniser!.numberOfTouchesRequired = 1
-        self.addGestureRecognizer(mTapGestureRecogniser!)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(deviceRotated), name: UIDevice.orientationDidChangeNotification, object: nil)
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
     }
@@ -286,12 +390,8 @@ class Mandelbrot: MTKView {
         mSceneMatrices.projectionMatrix = projectionMatrix
         
         var signatureVertices = Array<Vertex>(repeating: Vertex.zero(), count: Consts.MAXIMUM_VERTICES)
-        var vertexBufferSize = signatureVertices.count * MemoryLayout<Vertex>.size
+        let vertexBufferSize = signatureVertices.count * MemoryLayout<Vertex>.size
         mSignatureVerticesBuffer = mDevice.makeBuffer(bytes: &signatureVertices, length: vertexBufferSize, options: .storageModeShared)
-        
-        var startEndVertices = Array<Vertex>(repeating: Vertex.zero(), count: Consts.MAXIMUM_VERTICES)
-        vertexBufferSize = startEndVertices.count * MemoryLayout<Vertex>.size
-        mStartEndVerticesBuffer = mDevice.makeBuffer(bytes: &startEndVertices, length: vertexBufferSize, options: .storageModeShared)
         
         guard let defaultLibrary = mDevice.makeDefaultLibrary() else { return }
         let fragmentProgram = defaultLibrary.makeFunction(name: "basic_fragment")
@@ -307,7 +407,6 @@ class Mandelbrot: MTKView {
         mPipelineState = try! mDevice.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
         
         mSignatureVerticesCount = 0
-        mStartEndVerticesCount = 0
         mPenThickness = 0.02
         mPreviousPoint = CGPoint(x: -100, y: -100)
     }
@@ -369,11 +468,6 @@ extension Mandelbrot: MTKViewDelegate {
         if (mSignatureVerticesCount > 2) {
             renderEncoder.setVertexBuffer(mSignatureVerticesBuffer, offset: 0, index: 0)
             renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: mSignatureVerticesCount)
-        }
-        
-        if (mStartEndVerticesCount > 0) {
-            renderEncoder.setVertexBuffer(mStartEndVerticesBuffer, offset: 0, index: 0)
-            renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: mStartEndVerticesCount)
         }
         
         renderEncoder.endEncoding()
