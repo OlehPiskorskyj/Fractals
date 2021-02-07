@@ -53,18 +53,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mtkView contentMode="scaleToFill" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float" translatesAutoresizingMaskIntoConstraints="NO" id="ZC5-Sr-emI" customClass="Mandelbrot" customModule="Fractals" customModuleProvider="target">
-                                <rect key="frame" x="47" y="328" width="320" height="240"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="240" id="NkZ-bN-eRo"/>
-                                    <constraint firstAttribute="width" constant="320" id="b9o-Fy-Dc4"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </mtkView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="lSc-sL-8NU"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="ZC5-Sr-emI" firstAttribute="centerY" secondItem="gal-fa-rwX" secondAttribute="centerY" id="9EF-14-xwl"/>
-                            <constraint firstItem="ZC5-Sr-emI" firstAttribute="centerX" secondItem="gal-fa-rwX" secondAttribute="centerX" id="mYt-JN-G61"/>
+                            <constraint firstItem="ZC5-Sr-emI" firstAttribute="top" secondItem="gal-fa-rwX" secondAttribute="top" id="3OX-gs-Uqk"/>
+                            <constraint firstItem="ZC5-Sr-emI" firstAttribute="leading" secondItem="gal-fa-rwX" secondAttribute="leading" id="8US-52-MTT"/>
+                            <constraint firstAttribute="bottom" secondItem="ZC5-Sr-emI" secondAttribute="bottom" id="8lr-y2-oE8"/>
+                            <constraint firstAttribute="trailing" secondItem="ZC5-Sr-emI" secondAttribute="trailing" id="Mm8-aM-AQT"/>
                         </constraints>
                     </view>
                 </viewController>
