@@ -9,21 +9,27 @@
 /* Begin PBXBuildFile section */
 		0324F74825CF671E0029943C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F74725CF671E0029943C /* AppDelegate.swift */; };
 		0324F74A25CF671E0029943C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F74925CF671E0029943C /* SceneDelegate.swift */; };
-		0324F74C25CF671E0029943C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F74B25CF671E0029943C /* ViewController.swift */; };
 		0324F74F25CF671E0029943C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0324F74D25CF671E0029943C /* Main.storyboard */; };
 		0324F75125CF67210029943C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0324F75025CF67210029943C /* Assets.xcassets */; };
 		0324F75425CF67210029943C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0324F75225CF67210029943C /* LaunchScreen.storyboard */; };
+		0324F76625CF6C350029943C /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F76525CF6C350029943C /* Main.swift */; };
+		0324F76A25CF6D8F0029943C /* MandelbrotSceen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F76925CF6D8F0029943C /* MandelbrotSceen.swift */; };
+		037B395725CF706D002F847B /* Mandelbrot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B395625CF706D002F847B /* Mandelbrot.swift */; };
+		037B395A25CF712A002F847B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 037B395925CF712A002F847B /* Shaders.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0324F74425CF671E0029943C /* Fractals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fractals.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0324F74725CF671E0029943C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0324F74925CF671E0029943C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0324F74B25CF671E0029943C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0324F74E25CF671E0029943C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0324F75025CF67210029943C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0324F75325CF67210029943C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0324F75525CF67210029943C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0324F76525CF6C350029943C /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
+		0324F76925CF6D8F0029943C /* MandelbrotSceen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MandelbrotSceen.swift; sourceTree = "<group>"; };
+		037B395625CF706D002F847B /* Mandelbrot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mandelbrot.swift; sourceTree = "<group>"; };
+		037B395925CF712A002F847B /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +62,50 @@
 		0324F74625CF671E0029943C /* Fractals */ = {
 			isa = PBXGroup;
 			children = (
-				0324F74725CF671E0029943C /* AppDelegate.swift */,
-				0324F74925CF671E0029943C /* SceneDelegate.swift */,
-				0324F74B25CF671E0029943C /* ViewController.swift */,
-				0324F74D25CF671E0029943C /* Main.storyboard */,
+				0324F76C25CF6DAD0029943C /* Controls */,
+				0324F76325CF6BEA0029943C /* Common */,
+				0324F76225CF6BE00029943C /* Views */,
 				0324F75025CF67210029943C /* Assets.xcassets */,
-				0324F75225CF67210029943C /* LaunchScreen.storyboard */,
 				0324F75525CF67210029943C /* Info.plist */,
 			);
 			path = Fractals;
+			sourceTree = "<group>";
+		};
+		0324F76225CF6BE00029943C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0324F76525CF6C350029943C /* Main.swift */,
+				0324F76925CF6D8F0029943C /* MandelbrotSceen.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0324F76325CF6BEA0029943C /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				0324F74725CF671E0029943C /* AppDelegate.swift */,
+				0324F74925CF671E0029943C /* SceneDelegate.swift */,
+				0324F75225CF67210029943C /* LaunchScreen.storyboard */,
+				0324F74D25CF671E0029943C /* Main.storyboard */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		0324F76C25CF6DAD0029943C /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				037B395C25CF7139002F847B /* Mandelbrot */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
+		037B395C25CF7139002F847B /* Mandelbrot */ = {
+			isa = PBXGroup;
+			children = (
+				037B395625CF706D002F847B /* Mandelbrot.swift */,
+				037B395925CF712A002F847B /* Shaders.metal */,
+			);
+			path = Mandelbrot;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,9 +178,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0324F74C25CF671E0029943C /* ViewController.swift in Sources */,
+				037B395A25CF712A002F847B /* Shaders.metal in Sources */,
 				0324F74825CF671E0029943C /* AppDelegate.swift in Sources */,
+				0324F76625CF6C350029943C /* Main.swift in Sources */,
 				0324F74A25CF671E0029943C /* SceneDelegate.swift in Sources */,
+				0324F76A25CF6D8F0029943C /* MandelbrotSceen.swift in Sources */,
+				037B395725CF706D002F847B /* Mandelbrot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
