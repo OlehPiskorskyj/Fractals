@@ -13,8 +13,11 @@ struct Vertex {
     var x: GLfloat
     var y: GLfloat
     var z: GLfloat
+    var r: GLfloat
+    var g: GLfloat
+    var b: GLfloat
     public static func zero() -> Vertex {
-        return Vertex.init(x: 0, y: 0, z: 0)
+        return Vertex.init(x: 0, y: 0, z: 0, r: 0, g: 0, b: 0)
     }
 }
 
@@ -75,25 +78,22 @@ class Mandelbrot: MTKView {
     
     // MARK: - vertex math utility methods
     func addColor2Vertex(vertex: inout Vertex, n: Int) {
-        var color: GLKVector4? = nil
+        var color: GLKVector3? = nil
         if (n == mFractalIterationsCount) {
-            color = GLKVector4Make(0.2, 0.4, 0.8, 1.0)
+            color = GLKVector3Make(0.2, 0.4, 0.8)
         } else if (n < 12) {
-            color = GLKVector4Make(0.0, 0.0, 0.0, 1.0)
+            color = GLKVector3Make(0.0, 0.0, 0.0)
         } else {
             //int color = (int)(n * logf(n)) % 256;
             //int color = (int)(n * sinf(n)) % 256;
             //int color = n % 256;
             let c = GLfloat((n * n + n) % 256)
-            color = GLKVector4Make(c / 255.0 + 0.3, c / 255.0 + 0.3, 0.0, 1.0)
+            color = GLKVector3Make(c / 255.0 + 0.3, c / 255.0 + 0.3, 0.0)
         }
         
-        /*
-        ((Vertex)*vertex).Color[0] = color.r;
-        ((Vertex)*vertex).Color[1] = color.g;
-        ((Vertex)*vertex).Color[2] = color.b;
-        ((Vertex)*vertex).Color[3] = color.a;
-        */
+        vertex.r = color!.r
+        vertex.g = color!.g
+        vertex.b = color!.b
     }
     
     func addVertex(vertex: inout Vertex) {
@@ -161,13 +161,13 @@ class Mandelbrot: MTKView {
                 let v3m = self.mandelbrot(x: x + 1, y: y + 1)
                 let v4m = self.mandelbrot(x: x + 1, y: y)
                 
-                var v1 = Vertex(x: GLfloat(Double(x) * delta), y: GLfloat(Double(v1m) / 255.0), z: GLfloat(Double(y + 1) * delta))
+                var v1 = Vertex(x: GLfloat(Double(x) * delta), y: GLfloat(Double(v1m) / 255.0), z: GLfloat(Double(y + 1) * delta), r: 1, g: 0, b: 0)
                 self.addColor2Vertex(vertex: &v1, n: v1m)
-                var v2 = Vertex(x: GLfloat(Double(x) * delta), y: GLfloat(Double(v2m) / 255.0), z: GLfloat(Double(y) * delta))
+                var v2 = Vertex(x: GLfloat(Double(x) * delta), y: GLfloat(Double(v2m) / 255.0), z: GLfloat(Double(y) * delta), r: 1, g: 0, b: 0)
                 self.addColor2Vertex(vertex: &v2, n: v2m)
-                var v3 = Vertex(x: GLfloat(Double(x + 1) * delta), y: GLfloat(Double(v3m) / 255.0), z: GLfloat(Double(y + 1) * delta))
+                var v3 = Vertex(x: GLfloat(Double(x + 1) * delta), y: GLfloat(Double(v3m) / 255.0), z: GLfloat(Double(y + 1) * delta), r: 1, g: 0, b: 0)
                 self.addColor2Vertex(vertex: &v3, n: v3m)
-                var v4 = Vertex(x: GLfloat(Double(x + 1) * delta), y: GLfloat(Double(v4m) / 255.0), z: GLfloat(Double(y) * delta))
+                var v4 = Vertex(x: GLfloat(Double(x + 1) * delta), y: GLfloat(Double(v4m) / 255.0), z: GLfloat(Double(y) * delta), r: 1, g: 0, b: 0)
                 self.addColor2Vertex(vertex: &v4, n: v4m)
                 
                 var index1 = UInt32(mVertexCount)
@@ -221,7 +221,7 @@ class Mandelbrot: MTKView {
         
         // start the iteration process
         for i in 0..<mFractalIterationsCount {
-            iterations = i
+            iterations = i + 1
             
             // remember value of previous iteration
             mFractalOldRealPart = mFractalNewRealPart;
@@ -249,13 +249,16 @@ class Mandelbrot: MTKView {
         self.sampleCount = 4
         
         self.setupMetal()
-        self.createMandelbrot()
+        
+        DispatchQueue.global().async {
+            self.createMandelbrot()
+        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(deviceRotated), name: UIDevice.orientationDidChangeNotification, object: nil)
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
     }
     
-    private func setupMetal() {
+    func setupMetal() {
         mDevice = MTLCreateSystemDefaultDevice()
         mCommandQueue = mDevice.makeCommandQueue()
         self.device = mDevice
@@ -291,7 +294,7 @@ class Mandelbrot: MTKView {
         mIndexCount = 0
     }
     
-    private func createAliasingTexture(texture: MTLTexture) -> MTLTexture? {
+    func createAliasingTexture(texture: MTLTexture) -> MTLTexture? {
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.pixelFormat = texture.pixelFormat
         textureDescriptor.width = texture.width
@@ -327,7 +330,7 @@ extension Mandelbrot: MTKViewDelegate {
         renderPassDescriptor.colorAttachments[0].texture = mTexture
         renderPassDescriptor.colorAttachments[0].resolveTexture = drawable.texture
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         renderPassDescriptor.colorAttachments[0].storeAction = .multisampleResolve
         
         guard let commandBuffer = mCommandQueue.makeCommandBuffer() else { return }
