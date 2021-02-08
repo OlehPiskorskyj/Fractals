@@ -32,7 +32,7 @@ vertex VertexOut basic_vertex(const device VertexIn *vertex_array[[buffer(0)]], 
     
     VertexOut outVertex = VertexOut();
     outVertex.computedPosition = projectionMatrix * viewModelMatrix * float4(v.position, 1.0);
-    outVertex.color = v.color;      //float3(0.0, 0.0, 0.0);
+    outVertex.color = v.color;
     
     return outVertex;
 }
