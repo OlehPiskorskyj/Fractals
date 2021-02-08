@@ -254,9 +254,9 @@ class Mandelbrot: MTKView {
         
         self.setupMetal()
         
-        //DispatchQueue.global().async {
+        DispatchQueue.global().async {
             self.createMandelbrot()
-        //}
+        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(deviceRotated), name: UIDevice.orientationDidChangeNotification, object: nil)
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
@@ -295,12 +295,10 @@ class Mandelbrot: MTKView {
         
         mPipelineState = try! mDevice.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
         
-        /*
         let depthStencilDescriptor = MTLDepthStencilDescriptor()
         depthStencilDescriptor.depthCompareFunction = .less
         depthStencilDescriptor.isDepthWriteEnabled = true
         mDepthStencilState = mDevice.makeDepthStencilState(descriptor: depthStencilDescriptor)
-        */
         
         mVertexCount = 0
         mIndexCount = 0
@@ -314,18 +312,6 @@ class Mandelbrot: MTKView {
         textureDescriptor.textureType = .type2DMultisample
         textureDescriptor.usage = [.renderTarget, .shaderRead]
         textureDescriptor.sampleCount = self.sampleCount
-        return mDevice.makeTexture(descriptor: textureDescriptor)
-    }
-    
-    func createDepthTexture(texture: MTLTexture) -> MTLTexture? {
-        let textureDescriptor = MTLTextureDescriptor()
-        textureDescriptor.pixelFormat = self.depthStencilPixelFormat
-        textureDescriptor.width = texture.width
-        textureDescriptor.height = texture.height
-        textureDescriptor.textureType = .type2DMultisample
-        textureDescriptor.usage = [.renderTarget, .shaderRead]
-        textureDescriptor.sampleCount = self.sampleCount
-        textureDescriptor.mipmapLevelCount = 1
         return mDevice.makeTexture(descriptor: textureDescriptor)
     }
 }
@@ -360,9 +346,8 @@ extension Mandelbrot: MTKViewDelegate {
         let depthAttachementTexureDescriptor = MTLRenderPassDepthAttachmentDescriptor()
         depthAttachementTexureDescriptor.clearDepth = 1.0
         depthAttachementTexureDescriptor.loadAction = .clear
-        depthAttachementTexureDescriptor.storeAction = .dontCare //.store
+        depthAttachementTexureDescriptor.storeAction = .dontCare
         depthAttachementTexureDescriptor.texture = mDevice.makeTexture(descriptor: depthTextureDescriptor)
-        //depthAttachementTexureDescriptor.texture = self.createDepthTexture(texture: drawable.texture)
         
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = mTexture
@@ -371,16 +356,6 @@ extension Mandelbrot: MTKViewDelegate {
         renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         renderPassDescriptor.colorAttachments[0].storeAction = .multisampleResolve
         renderPassDescriptor.depthAttachment = depthAttachementTexureDescriptor
-        
-        /*
-        // depth
-        let depthTex = self.createDepthTexture(texture: drawable.texture)
-        renderPassDescriptor.depthAttachment = MTLRenderPassDepthAttachmentDescriptor()
-        renderPassDescriptor.depthAttachment.storeAction = .dontCare
-        renderPassDescriptor.depthAttachment.loadAction = .clear
-        renderPassDescriptor.depthAttachment.clearDepth = 1;
-        renderPassDescriptor.depthAttachment.texture = depthTex
-        */
         
         guard let commandBuffer = mCommandQueue.makeCommandBuffer() else { return }
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
@@ -391,8 +366,8 @@ extension Mandelbrot: MTKViewDelegate {
         let uniformBufferSize = MemoryLayout.size(ofValue: mSceneMatrices)
         mUniformBuffer = mDevice.makeBuffer(bytes: &mSceneMatrices, length: uniformBufferSize, options: .storageModeShared)
         renderEncoder.setVertexBuffer(mUniformBuffer, offset: 0, index: 1)
+        renderEncoder.setDepthStencilState(mDepthStencilState)
         renderEncoder.setRenderPipelineState(mPipelineState)
-        //renderEncoder.setDepthStencilState(mDepthStencilState)
         
         if (mVertexCount > 0) {
             renderEncoder.setVertexBuffer(mVertexBuffer, offset: 0, index: 0)
@@ -408,14 +383,3 @@ extension Mandelbrot: MTKViewDelegate {
         #endif
     }
 }
-
-/*
-private extension MTLRenderPassDescriptor {
-    func setUpDepthAttachment(texture: MTLTexture) {
-        depthAttachment.texture = texture
-        depthAttachment.loadAction = .clear
-        depthAttachment.storeAction = .store
-        depthAttachment.clearDepth = 1
-    }
-}
-*/
