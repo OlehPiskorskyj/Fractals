@@ -55,6 +55,20 @@
                             <mtkView contentMode="scaleToFill" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float" translatesAutoresizingMaskIntoConstraints="NO" id="ZC5-Sr-emI" customClass="Mandelbrot" customModule="Fractals" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </mtkView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IYO-IA-LSE">
+                                <rect key="frame" x="20" y="792" width="120" height="50"/>
+                                <color key="backgroundColor" systemColor="systemRedColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="Any-sJ-1xg"/>
+                                    <constraint firstAttribute="height" constant="50" id="Ox1-FW-Ldi"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="btnCloseClick:" destination="hu6-Wc-B0Q" eventType="touchUpInside" id="Jc2-8x-zgB"/>
+                                    <action selector="btnMandelbrotClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rJM-pE-w2c"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="lSc-sL-8NU"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -63,8 +77,13 @@
                             <constraint firstItem="ZC5-Sr-emI" firstAttribute="leading" secondItem="gal-fa-rwX" secondAttribute="leading" id="8US-52-MTT"/>
                             <constraint firstAttribute="bottom" secondItem="ZC5-Sr-emI" secondAttribute="bottom" id="8lr-y2-oE8"/>
                             <constraint firstAttribute="trailing" secondItem="ZC5-Sr-emI" secondAttribute="trailing" id="Mm8-aM-AQT"/>
+                            <constraint firstItem="IYO-IA-LSE" firstAttribute="leading" secondItem="lSc-sL-8NU" secondAttribute="leading" constant="20" id="aKU-Se-WIQ"/>
+                            <constraint firstItem="lSc-sL-8NU" firstAttribute="bottom" secondItem="IYO-IA-LSE" secondAttribute="bottom" constant="20" id="u6s-5K-meu"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="btnClose" destination="IYO-IA-LSE" id="hHO-GK-bPX"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SPh-Sz-Xfu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -96,6 +115,9 @@
         </systemColor>
         <systemColor name="systemGroupedBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

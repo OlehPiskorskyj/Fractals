@@ -40,6 +40,7 @@ class Mandelbrot: MTKView {
     private var mCommandQueue: MTLCommandQueue!
     private var mPipelineState: MTLRenderPipelineState!
     private var mDepthStencilState: MTLDepthStencilState!
+    private var mTextureDepth: MTLTexture? = nil
     private var mTexture: MTLTexture? = nil
     
     private var mSceneMatrices = SceneMatrices()
@@ -49,22 +50,22 @@ class Mandelbrot: MTKView {
     
     private var mVertexBuffer: MTLBuffer!
     private var mIndexBuffer: MTLBuffer!
-    private var mVertexCount = 0
-    private var mIndexCount = 0
+    private var mVertexCount: UInt32 = 0
+    private var mIndexCount: UInt32 = 0
+    
+    private var mFractalPointRealPart: Float = 0.0
+    private var mFractalPointImaginePart: Float = 0.0
+    private var mFractalNewRealPart: Float = 0.0
+    private var mFractalNewImaginePart: Float = 0.0
+    private var mFractalOldRealPart: Float = 0.0
+    private var mFractalOldImaginePart: Float = 0.0
+    private var mFractalZoom: Float = 0.0
+    private var mFractalX: Float = 0.0
+    private var mFractalY: Float = 0.0
+    private var mFractalIterationsCount: Int = 0
     
     private var mCurrentOrientation: UIDeviceOrientation = .unknown
     private var mIsUpdateWithOrientation: Bool = false
-    
-    private var mFractalPointRealPart: Double = 0.0
-    private var mFractalPointImaginePart: Double = 0.0
-    private var mFractalNewRealPart: Double = 0.0
-    private var mFractalNewImaginePart: Double = 0.0
-    private var mFractalOldRealPart: Double = 0.0
-    private var mFractalOldImaginePart: Double = 0.0
-    private var mFractalZoom: Double = 0.0
-    private var mFractalX: Double = 0.0
-    private var mFractalY: Double = 0.0
-    private var mFractalIterationsCount: Int = 0
     
     // MARK: - ctors
     override public init(frame frameRect: CGRect, device: MTLDevice?) {
@@ -100,7 +101,7 @@ class Mandelbrot: MTKView {
     func addVertex(vertex: inout Vertex) {
         if (mVertexCount < Consts.FRACTAL_MAX_VERTICES) {
             let vertexSize = MemoryLayout<Vertex>.size
-            memcpy(mVertexBuffer.contents() + vertexSize * mVertexCount, &vertex, vertexSize)
+            memcpy(mVertexBuffer.contents() + vertexSize * Int(mVertexCount), &vertex, vertexSize)
             mVertexCount += 1
         }
     }
@@ -108,7 +109,7 @@ class Mandelbrot: MTKView {
     func addIndex(index: inout UInt32) {
         if (mIndexCount < Consts.FRACTAL_MAX_INDICES) {
             let indexSize = MemoryLayout<UInt32>.size
-            memcpy(mIndexBuffer.contents() + indexSize * mIndexCount, &index, indexSize)
+            memcpy(mIndexBuffer.contents() + indexSize * Int(mIndexCount), &index, indexSize)
             mIndexCount += 1
         }
     }
@@ -124,6 +125,8 @@ class Mandelbrot: MTKView {
     
     public func tearDownMetal() {
         mVertexBuffer = nil
+        mIndexBuffer = nil
+        mTextureDepth = nil
         mTexture = nil
     }
     
@@ -171,19 +174,19 @@ class Mandelbrot: MTKView {
                 var v4 = Vertex(x: GLfloat(Double(x + 1) * delta), y: GLfloat(Double(v4m) / 255.0), z: GLfloat(Double(y) * delta), r: 1, g: 0, b: 0)
                 self.addColor2Vertex(vertex: &v4, n: v4m)
                 
-                var index1 = UInt32(mVertexCount)
-                var index2 = UInt32(mVertexCount + 1)
-                var index3 = UInt32(mVertexCount + 1)
-                var index4 = UInt32(mVertexCount + 2)
-                var index5 = UInt32(mVertexCount + 2)
-                var index6 = UInt32(mVertexCount)
+                var index1 = mVertexCount
+                var index2 = mVertexCount + 1
+                var index3 = mVertexCount + 1
+                var index4 = mVertexCount + 2
+                var index5 = mVertexCount + 2
+                var index6 = mVertexCount
                 
-                var index7 = UInt32(mVertexCount + 1)
-                var index8 = UInt32(mVertexCount + 3)
-                var index9 = UInt32(mVertexCount + 3)
-                var index10 = UInt32(mVertexCount + 2)
-                var index11 = UInt32(mVertexCount + 2)
-                var index12 = UInt32(mVertexCount + 1)
+                var index7 = mVertexCount + 1
+                var index8 = mVertexCount + 3
+                var index9 = mVertexCount + 3
+                var index10 = mVertexCount + 2
+                var index11 = mVertexCount + 2
+                var index12 = mVertexCount + 1
                 
                 self.addIndex(index: &index1)
                 self.addIndex(index: &index2)
@@ -210,8 +213,8 @@ class Mandelbrot: MTKView {
     func mandelbrot(x: Int, y: Int) -> Int {
         
         // calculate the initial real and imaginary part of z, based on the pixel location and zoom and position values
-        mFractalPointRealPart = 1.5 * Double(x - Consts.FRACTAL_SIZE / 2) / (0.5 * mFractalZoom * Double(Consts.FRACTAL_SIZE)) + mFractalX
-        mFractalPointImaginePart = Double(y - Consts.FRACTAL_SIZE / 2) / (0.5 * mFractalZoom * Double(Consts.FRACTAL_SIZE)) + mFractalY
+        mFractalPointRealPart = 1.5 * Float(x - Consts.FRACTAL_SIZE / 2) / (0.5 * mFractalZoom * Float(Consts.FRACTAL_SIZE)) + mFractalX
+        mFractalPointImaginePart = Float(y - Consts.FRACTAL_SIZE / 2) / (0.5 * mFractalZoom * Float(Consts.FRACTAL_SIZE)) + mFractalY
         mFractalNewRealPart = 0.0
         mFractalNewImaginePart = 0.0
         mFractalOldRealPart = 0.0
@@ -225,8 +228,8 @@ class Mandelbrot: MTKView {
             iterations = i + 1
             
             // remember value of previous iteration
-            mFractalOldRealPart = mFractalNewRealPart;
-            mFractalOldImaginePart = mFractalNewImaginePart;
+            mFractalOldRealPart = mFractalNewRealPart
+            mFractalOldImaginePart = mFractalNewImaginePart
             
             // the actual iteration, the real and imaginary part are calculated
             mFractalNewRealPart = mFractalOldRealPart * mFractalOldRealPart - mFractalOldImaginePart * mFractalOldImaginePart + mFractalPointRealPart;
@@ -277,7 +280,7 @@ class Mandelbrot: MTKView {
         let vertexBufferSize = vertexBuffer.count * MemoryLayout<Vertex>.size
         mVertexBuffer = mDevice.makeBuffer(bytes: &vertexBuffer, length: vertexBufferSize, options: .storageModeShared)
         
-        var indexBuffer = Array<Int>(repeating: 0, count: Consts.FRACTAL_MAX_INDICES)
+        var indexBuffer = Array<UInt32>(repeating: 0, count: Consts.FRACTAL_MAX_INDICES)
         let indexBufferSize = indexBuffer.count * MemoryLayout<UInt32>.size
         mIndexBuffer = mDevice.makeBuffer(bytes: &indexBuffer, length: indexBufferSize, options: .storageModeShared)
         
@@ -314,12 +317,23 @@ class Mandelbrot: MTKView {
         textureDescriptor.sampleCount = self.sampleCount
         return mDevice.makeTexture(descriptor: textureDescriptor)
     }
+    
+    func createDepthTexture(texture: MTLTexture) -> MTLTexture? {
+        let depthTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .depth32Float, width: texture.width, height: texture.height, mipmapped: false)
+        depthTextureDescriptor.usage = [.renderTarget, .shaderRead, .shaderWrite, .pixelFormatView]
+        depthTextureDescriptor.textureType = .type2DMultisample
+        depthTextureDescriptor.storageMode = .private
+        depthTextureDescriptor.resourceOptions = [.storageModePrivate]
+        depthTextureDescriptor.sampleCount = 4
+        return mDevice.makeTexture(descriptor: depthTextureDescriptor)
+    }
 }
 
 extension Mandelbrot: MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         let projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), fabsf(Float(view.frame.width / view.frame.height)), 0.1, 100.0);
         mSceneMatrices.projectionMatrix = projectionMatrix
+        mTextureDepth = nil
         mTexture = nil
     }
     
@@ -328,26 +342,21 @@ extension Mandelbrot: MTKViewDelegate {
         return
         #else
         
-        guard let drawable = view.currentDrawable else {
-            return
-        }
+        guard let drawable = view.currentDrawable else { return }
         
         if (mTexture == nil) {
             mTexture = self.createAliasingTexture(texture: drawable.texture)
         }
         
-        let depthTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .depth32Float, width: mTexture!.width, height: mTexture!.height, mipmapped: false)
-        depthTextureDescriptor.usage = [.renderTarget, .shaderRead, .shaderWrite, .pixelFormatView]
-        depthTextureDescriptor.textureType = .type2DMultisample
-        depthTextureDescriptor.storageMode = .private
-        depthTextureDescriptor.resourceOptions = [.storageModePrivate]
-        depthTextureDescriptor.sampleCount = 4
+        if (mTextureDepth == nil) {
+            mTextureDepth = self.createDepthTexture(texture: drawable.texture)
+        }
         
         let depthAttachementTexureDescriptor = MTLRenderPassDepthAttachmentDescriptor()
         depthAttachementTexureDescriptor.clearDepth = 1.0
         depthAttachementTexureDescriptor.loadAction = .clear
         depthAttachementTexureDescriptor.storeAction = .dontCare
-        depthAttachementTexureDescriptor.texture = mDevice.makeTexture(descriptor: depthTextureDescriptor)
+        depthAttachementTexureDescriptor.texture = mTextureDepth
         
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = mTexture
@@ -371,7 +380,7 @@ extension Mandelbrot: MTKViewDelegate {
         
         if (mVertexCount > 0) {
             renderEncoder.setVertexBuffer(mVertexBuffer, offset: 0, index: 0)
-            renderEncoder.drawIndexedPrimitives(type: .line, indexCount: mIndexCount, indexType: .uint32, indexBuffer: mIndexBuffer, indexBufferOffset: 0)
+            renderEncoder.drawIndexedPrimitives(type: .line, indexCount: Int(mIndexCount), indexType: .uint32, indexBuffer: mIndexBuffer, indexBufferOffset: 0)
         }
         
         renderEncoder.endEncoding()
