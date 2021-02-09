@@ -74,8 +74,8 @@
 		0324F76225CF6BE00029943C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				0324F76525CF6C350029943C /* Main.swift */,
 				0324F76925CF6D8F0029943C /* MandelbrotSceen.swift */,
+				0324F76525CF6C350029943C /* Main.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

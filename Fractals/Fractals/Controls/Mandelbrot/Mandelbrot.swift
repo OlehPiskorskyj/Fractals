@@ -67,6 +67,8 @@ class Mandelbrot: MTKView {
     private var mCurrentOrientation: UIDeviceOrientation = .unknown
     private var mIsUpdateWithOrientation: Bool = false
     
+    public var zoom: Float = -5.0
+    
     // MARK: - ctors
     override public init(frame frameRect: CGRect, device: MTLDevice?) {
         super.init(frame: frameRect, device: device)
@@ -368,6 +370,8 @@ extension Mandelbrot: MTKViewDelegate {
         
         guard let commandBuffer = mCommandQueue.makeCommandBuffer() else { return }
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+        
+        mLookAt = GLKMatrix4MakeLookAt(0.0, 2.0 - self.zoom, 4.0 - self.zoom, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
         
         var modelView = GLKMatrix4Multiply(GLKMatrix4MakeScale(10.0, 1.0, 10.0), GLKMatrix4MakeRotation(mAngle, 0.0, 1.0, 0.0))
         modelView = GLKMatrix4Multiply(modelView, GLKMatrix4MakeTranslation(-0.5, 0.0, -0.5))
