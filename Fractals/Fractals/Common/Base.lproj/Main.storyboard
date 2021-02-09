@@ -55,7 +55,7 @@
                             <mtkView contentMode="scaleToFill" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float" translatesAutoresizingMaskIntoConstraints="NO" id="ZC5-Sr-emI" customClass="Mandelbrot" customModule="Fractals" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </mtkView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f9F-ER-WiG">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f9F-ER-WiG" customClass="MRButton" customModule="Fractals" customModuleProvider="target">
                                 <rect key="frame" x="294" y="742" width="100" height="100"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <constraints>
@@ -64,9 +64,6 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                 <state key="normal" title="-"/>
-                                <connections>
-                                    <action selector="btnMinusClick:" destination="hu6-Wc-B0Q" eventType="touchUpInside" id="Cdq-hJ-Urf"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IYO-IA-LSE">
                                 <rect key="frame" x="20" y="742" width="100" height="100"/>
@@ -81,7 +78,7 @@
                                     <action selector="btnCloseClick:" destination="hu6-Wc-B0Q" eventType="touchUpInside" id="Jc2-8x-zgB"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hnj-ZN-zRJ">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hnj-ZN-zRJ" customClass="MRButton" customModule="Fractals" customModuleProvider="target">
                                 <rect key="frame" x="294" y="622" width="100" height="100"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <constraints>
@@ -90,9 +87,6 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                 <state key="normal" title="+"/>
-                                <connections>
-                                    <action selector="btnAddClick:" destination="hu6-Wc-B0Q" eventType="touchUpInside" id="oTc-82-2PR"/>
-                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="lSc-sL-8NU"/>
@@ -111,9 +105,9 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="btnAdd" destination="hnj-ZN-zRJ" id="Q6V-3u-XcM"/>
+                        <outlet property="btnAdd" destination="hnj-ZN-zRJ" id="eQU-OF-iCO"/>
                         <outlet property="btnClose" destination="IYO-IA-LSE" id="hHO-GK-bPX"/>
-                        <outlet property="btnMinus" destination="f9F-ER-WiG" id="cvk-pU-1MW"/>
+                        <outlet property="btnMinus" destination="f9F-ER-WiG" id="rof-Or-KP1"/>
                         <outlet property="viewMandelbrot" destination="ZC5-Sr-emI" id="xpn-56-e4L"/>
                     </connections>
                 </viewController>

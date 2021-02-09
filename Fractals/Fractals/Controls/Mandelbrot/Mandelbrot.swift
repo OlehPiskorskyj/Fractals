@@ -148,7 +148,7 @@ class Mandelbrot: MTKView {
     
     // MARK: - fractal logic
     func createMandelbrot() {
-        mAngle = 0.33
+        mAngle = Float.pi / 2.0
         mVertexCount = 0
         mIndexCount = 0
 

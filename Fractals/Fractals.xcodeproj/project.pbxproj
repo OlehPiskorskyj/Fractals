@@ -14,6 +14,7 @@
 		0324F75425CF67210029943C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0324F75225CF67210029943C /* LaunchScreen.storyboard */; };
 		0324F76625CF6C350029943C /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F76525CF6C350029943C /* Main.swift */; };
 		0324F76A25CF6D8F0029943C /* MandelbrotSceen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F76925CF6D8F0029943C /* MandelbrotSceen.swift */; };
+		03480E5725D2F3660088E5B1 /* MRButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03480E5625D2F3660088E5B1 /* MRButton.swift */; };
 		037B395725CF706D002F847B /* Mandelbrot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B395625CF706D002F847B /* Mandelbrot.swift */; };
 		037B395A25CF712A002F847B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 037B395925CF712A002F847B /* Shaders.metal */; };
 /* End PBXBuildFile section */
@@ -28,6 +29,7 @@
 		0324F75525CF67210029943C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0324F76525CF6C350029943C /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		0324F76925CF6D8F0029943C /* MandelbrotSceen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MandelbrotSceen.swift; sourceTree = "<group>"; };
+		03480E5625D2F3660088E5B1 /* MRButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRButton.swift; sourceTree = "<group>"; };
 		037B395625CF706D002F847B /* Mandelbrot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mandelbrot.swift; sourceTree = "<group>"; };
 		037B395925CF712A002F847B /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -94,9 +96,18 @@
 		0324F76C25CF6DAD0029943C /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				03480E5525D2F3420088E5B1 /* UserInterface */,
 				037B395C25CF7139002F847B /* Mandelbrot */,
 			);
 			path = Controls;
+			sourceTree = "<group>";
+		};
+		03480E5525D2F3420088E5B1 /* UserInterface */ = {
+			isa = PBXGroup;
+			children = (
+				03480E5625D2F3660088E5B1 /* MRButton.swift */,
+			);
+			path = UserInterface;
 			sourceTree = "<group>";
 		};
 		037B395C25CF7139002F847B /* Mandelbrot */ = {
@@ -184,6 +195,7 @@
 				0324F74A25CF671E0029943C /* SceneDelegate.swift in Sources */,
 				0324F76A25CF6D8F0029943C /* MandelbrotSceen.swift in Sources */,
 				037B395725CF706D002F847B /* Mandelbrot.swift in Sources */,
+				03480E5725D2F3660088E5B1 /* MRButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
