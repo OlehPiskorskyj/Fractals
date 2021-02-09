@@ -80,6 +80,10 @@ class Mandelbrot: MTKView {
         self.internalInit()
     }
     
+    deinit {
+        self.tearDownMetal()
+    }
+    
     // MARK: - vertex math utility methods
     func addColor2Vertex(vertex: inout Vertex, n: Int) {
         var color: GLKVector3? = nil
@@ -126,6 +130,11 @@ class Mandelbrot: MTKView {
     }
     
     public func tearDownMetal() {
+        //mVertexBuffer.setPurgeableState(.empty)
+        //mIndexBuffer.setPurgeableState(.empty)
+        //mTextureDepth?.setPurgeableState(.empty)
+        //mTexture?.setPurgeableState(.empty)
+        
         mVertexBuffer = nil
         mIndexBuffer = nil
         mTextureDepth = nil
