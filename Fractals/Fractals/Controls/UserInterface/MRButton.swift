@@ -25,19 +25,6 @@ class MRButton: UIButton {
         self.internalInit()
     }
     
-    // MARK: - events
-    @objc func buttonLongPress(gesture: UILongPressGestureRecognizer) {
-        if (gesture.state == .began) {
-            self.timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { [weak self] (timer) in
-                self?.longPressAction?()
-            })
-        } else if (gesture.state == .ended) {
-            self.timer?.invalidate()
-            self.timer = nil
-        }
-    }
-    
-    // MARK: - other methods
     func internalInit() {
         let borderColor = self.backgroundColor
         
@@ -50,5 +37,17 @@ class MRButton: UIButton {
         longPrestGR.minimumPressDuration = 0.0
         longPrestGR.cancelsTouchesInView = true
         self.addGestureRecognizer(longPrestGR)
+    }
+    
+    // MARK: - events
+    @objc func buttonLongPress(gesture: UILongPressGestureRecognizer) {
+        if (gesture.state == .began) {
+            self.timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { [weak self] (timer) in
+                self?.longPressAction?()
+            })
+        } else if (gesture.state == .ended) {
+            self.timer?.invalidate()
+            self.timer = nil
+        }
     }
 }

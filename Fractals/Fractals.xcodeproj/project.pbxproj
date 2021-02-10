@@ -16,7 +16,8 @@
 		0324F76A25CF6D8F0029943C /* MandelbrotSceen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F76925CF6D8F0029943C /* MandelbrotSceen.swift */; };
 		03480E5725D2F3660088E5B1 /* MRButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03480E5625D2F3660088E5B1 /* MRButton.swift */; };
 		037B395725CF706D002F847B /* Mandelbrot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B395625CF706D002F847B /* Mandelbrot.swift */; };
-		037B395A25CF712A002F847B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 037B395925CF712A002F847B /* Shaders.metal */; };
+		0399A89F25D4568A0092F776 /* BaseMetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0399A89E25D4568A0092F776 /* BaseMetalView.swift */; };
+		0399A8A325D460560092F776 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 0399A8A225D460560092F776 /* Shaders.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +32,8 @@
 		0324F76925CF6D8F0029943C /* MandelbrotSceen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MandelbrotSceen.swift; sourceTree = "<group>"; };
 		03480E5625D2F3660088E5B1 /* MRButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRButton.swift; sourceTree = "<group>"; };
 		037B395625CF706D002F847B /* Mandelbrot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mandelbrot.swift; sourceTree = "<group>"; };
-		037B395925CF712A002F847B /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		0399A89E25D4568A0092F776 /* BaseMetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMetalView.swift; sourceTree = "<group>"; };
+		0399A8A225D460560092F776 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 		0324F76C25CF6DAD0029943C /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				0399A89D25D456540092F776 /* Metal */,
 				03480E5525D2F3420088E5B1 /* UserInterface */,
 				037B395C25CF7139002F847B /* Mandelbrot */,
 			);
@@ -114,9 +117,17 @@
 			isa = PBXGroup;
 			children = (
 				037B395625CF706D002F847B /* Mandelbrot.swift */,
-				037B395925CF712A002F847B /* Shaders.metal */,
 			);
 			path = Mandelbrot;
+			sourceTree = "<group>";
+		};
+		0399A89D25D456540092F776 /* Metal */ = {
+			isa = PBXGroup;
+			children = (
+				0399A89E25D4568A0092F776 /* BaseMetalView.swift */,
+				0399A8A225D460560092F776 /* Shaders.metal */,
+			);
+			path = Metal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,13 +200,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				037B395A25CF712A002F847B /* Shaders.metal in Sources */,
 				0324F74825CF671E0029943C /* AppDelegate.swift in Sources */,
 				0324F76625CF6C350029943C /* Main.swift in Sources */,
 				0324F74A25CF671E0029943C /* SceneDelegate.swift in Sources */,
 				0324F76A25CF6D8F0029943C /* MandelbrotSceen.swift in Sources */,
 				037B395725CF706D002F847B /* Mandelbrot.swift in Sources */,
+				0399A8A325D460560092F776 /* Shaders.metal in Sources */,
 				03480E5725D2F3660088E5B1 /* MRButton.swift in Sources */,
+				0399A89F25D4568A0092F776 /* BaseMetalView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
