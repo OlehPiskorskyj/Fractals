@@ -50,22 +50,29 @@ class Mandelbrot: BaseMetalView {
     
     // MARK: - utility methods
     func addColor2Vertex(vertex: inout Vertex, n: Int) {
-        var color: GLKVector3? = nil
+        var color = simd_float3.zero
         if (n == mFractalIterationsCount) {
-            color = GLKVector3Make(0.2, 0.4, 0.8)
+            color.x = 0.2
+            color.y = 0.4
+            color.z = 0.8
         } else if (n < 12) {
-            color = GLKVector3Make(0.0, 0.0, 0.0)
+            //color = simd_float3.zero
         } else {
-            //int color = (int)(n * logf(n)) % 256;
-            //int color = (int)(n * sinf(n)) % 256;
-            //int color = n % 256;
-            let c = GLfloat((n * n + n) % 256)
-            color = GLKVector3Make(c / 255.0 + 0.3, c / 255.0 + 0.3, 0.0)
+            /* alternative color logic
+            int color = (int)(n * logf(n)) % 256;
+            int color = (int)(n * sinf(n)) % 256;
+            int color = n % 256;
+            */
+            
+            let c = Float((n * n + n) % 256)
+            color.x = c / 255.0 + 0.3
+            color.y = c / 255.0 + 0.3
+            color.z = 0.0
         }
         
-        vertex.r = color!.r
-        vertex.g = color!.g
-        vertex.b = color!.b
+        vertex.r = color.x
+        vertex.g = color.y
+        vertex.b = color.z
     }
     
     // MARK: - fractal logic
@@ -79,7 +86,7 @@ class Mandelbrot: BaseMetalView {
         mFractalY = 0.0
         mFractalIterationsCount = 250
         
-        let delta = 1.0 / Double(Consts.FRACTAL_SIZE)
+        let delta = 1.0 / Float(Consts.FRACTAL_SIZE)
         
         for x in 0..<Consts.FRACTAL_SIZE {
             for y in 0..<Consts.FRACTAL_SIZE {
@@ -89,13 +96,13 @@ class Mandelbrot: BaseMetalView {
                 let v3m = self.mandelbrot(x: x + 1, y: y + 1)
                 let v4m = self.mandelbrot(x: x + 1, y: y)
                 
-                var v1 = Vertex(x: GLfloat(Double(x) * delta), y: GLfloat(Double(v1m) / 255.0), z: GLfloat(Double(y + 1) * delta), r: 1, g: 0, b: 0)
+                var v1 = Vertex(x: Float(x) * delta, y: Float(v1m) / 255.0, z: Float(y + 1) * delta, r: 1.0, g: 0.0, b: 0.0)
                 self.addColor2Vertex(vertex: &v1, n: v1m)
-                var v2 = Vertex(x: GLfloat(Double(x) * delta), y: GLfloat(Double(v2m) / 255.0), z: GLfloat(Double(y) * delta), r: 1, g: 0, b: 0)
+                var v2 = Vertex(x: Float(x) * delta, y: Float(v2m) / 255.0, z: Float(y) * delta, r: 1.0, g: 0.0, b: 0.0)
                 self.addColor2Vertex(vertex: &v2, n: v2m)
-                var v3 = Vertex(x: GLfloat(Double(x + 1) * delta), y: GLfloat(Double(v3m) / 255.0), z: GLfloat(Double(y + 1) * delta), r: 1, g: 0, b: 0)
+                var v3 = Vertex(x: Float(x + 1) * delta, y: Float(v3m) / 255.0, z: Float(y + 1) * delta, r: 1.0, g: 0.0, b: 0.0)
                 self.addColor2Vertex(vertex: &v3, n: v3m)
-                var v4 = Vertex(x: GLfloat(Double(x + 1) * delta), y: GLfloat(Double(v4m) / 255.0), z: GLfloat(Double(y) * delta), r: 1, g: 0, b: 0)
+                var v4 = Vertex(x: Float(x + 1) * delta, y: Float(v4m) / 255.0, z: Float(y) * delta, r: 1.0, g: 0.0, b: 0.0)
                 self.addColor2Vertex(vertex: &v4, n: v4m)
                 
                 var index1 = mVertexCount
@@ -160,7 +167,6 @@ class Mandelbrot: BaseMetalView {
                 break
             }
         }
-        
         return iterations
     }
     

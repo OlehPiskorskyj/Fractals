@@ -10,12 +10,12 @@ import MetalKit
 import GLKit
 
 struct Vertex {
-    var x: GLfloat
-    var y: GLfloat
-    var z: GLfloat
-    var r: GLfloat
-    var g: GLfloat
-    var b: GLfloat
+    var x: Float
+    var y: Float
+    var z: Float
+    var r: Float
+    var g: Float
+    var b: Float
     public static func zero() -> Vertex {
         return Vertex.init(x: 0, y: 0, z: 0, r: 0, g: 0, b: 0)
     }

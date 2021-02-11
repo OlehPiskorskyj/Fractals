@@ -100,7 +100,7 @@
 			children = (
 				0399A89D25D456540092F776 /* Metal */,
 				03480E5525D2F3420088E5B1 /* UserInterface */,
-				037B395C25CF7139002F847B /* Mandelbrot */,
+				037B395625CF706D002F847B /* Mandelbrot.swift */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -111,14 +111,6 @@
 				03480E5625D2F3660088E5B1 /* MRButton.swift */,
 			);
 			path = UserInterface;
-			sourceTree = "<group>";
-		};
-		037B395C25CF7139002F847B /* Mandelbrot */ = {
-			isa = PBXGroup;
-			children = (
-				037B395625CF706D002F847B /* Mandelbrot.swift */,
-			);
-			path = Mandelbrot;
 			sourceTree = "<group>";
 		};
 		0399A89D25D456540092F776 /* Metal */ = {
