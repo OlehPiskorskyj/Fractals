@@ -148,26 +148,27 @@ class Mandelbrot: BaseMetalView {
         mFractalOldImaginePart = 0.0
         
         // "i" will represent the number of iterations
-        var iterations = 0
+        var i = 0
         
         // start the iteration process
-        for i in 0..<mFractalIterationsCount {
-            iterations = i + 1
+        while i < mFractalIterationsCount {
+            i += 1
             
             // remember value of previous iteration
             mFractalOldRealPart = mFractalNewRealPart
             mFractalOldImaginePart = mFractalNewImaginePart
             
             // the actual iteration, the real and imaginary part are calculated
-            mFractalNewRealPart = mFractalOldRealPart * mFractalOldRealPart - mFractalOldImaginePart * mFractalOldImaginePart + mFractalPointRealPart;
-            mFractalNewImaginePart = 2.0 * mFractalOldRealPart * mFractalOldImaginePart + mFractalPointImaginePart;
+            mFractalNewRealPart = mFractalOldRealPart * mFractalOldRealPart - mFractalOldImaginePart * mFractalOldImaginePart + mFractalPointRealPart
+            mFractalNewImaginePart = 2.0 * mFractalOldRealPart * mFractalOldImaginePart + mFractalPointImaginePart
             
             // if the point is outside the circle with radius 2: stop
             if ((mFractalNewRealPart * mFractalNewRealPart + mFractalNewImaginePart * mFractalNewImaginePart) > 4.0) {
                 break
             }
         }
-        return iterations
+        
+        return i
     }
     
     // MARK: - other methods
