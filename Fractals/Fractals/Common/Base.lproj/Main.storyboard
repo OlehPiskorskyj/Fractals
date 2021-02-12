@@ -29,13 +29,29 @@
                                     <action selector="btnMandelbrotClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Z5-a3-yKw"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Uz-Mc-Xm6">
+                                <rect key="frame" x="40" y="234" width="334" height="50"/>
+                                <color key="backgroundColor" red="0.0" green="0.63137254899999995" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="3z4-pt-DCc"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Gaston Julia"/>
+                                <connections>
+                                    <action selector="btnJuliaClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sMN-yX-OUC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="2nI-Z7-uFR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="23F-5K-sZr"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2nI-Z7-uFR" secondAttribute="trailing" constant="40" id="6i2-aS-2Cy"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4Uz-Mc-Xm6" secondAttribute="trailing" constant="40" id="Cl8-If-bbt"/>
                             <constraint firstItem="2nI-Z7-uFR" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="120" id="LmS-UH-u4j"/>
+                            <constraint firstItem="4Uz-Mc-Xm6" firstAttribute="top" secondItem="2nI-Z7-uFR" secondAttribute="bottom" constant="20" id="Mjh-Xe-wWU"/>
+                            <constraint firstItem="4Uz-Mc-Xm6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="ePD-EB-rc9"/>
+                            <constraint firstItem="4Uz-Mc-Xm6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zGn-45-fCS"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Gzo-gh-ldC"/>
@@ -114,6 +130,50 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SPh-Sz-Xfu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1917" y="67"/>
+        </scene>
+        <!--Julia Screen-->
+        <scene sceneID="V7U-pd-jtK">
+            <objects>
+                <viewController storyboardIdentifier="JuliaScreen" id="UvS-Y1-M9K" customClass="JuliaScreen" customModule="Fractals" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="OlU-Vj-tUK">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mtkView contentMode="scaleToFill" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float" translatesAutoresizingMaskIntoConstraints="NO" id="85x-Eh-r10" customClass="Julia" customModule="Fractals" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </mtkView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eBM-VT-q73">
+                                <rect key="frame" x="20" y="742" width="100" height="100"/>
+                                <color key="backgroundColor" systemColor="systemRedColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="36Q-77-97d"/>
+                                    <constraint firstAttribute="width" constant="100" id="iok-ii-KrD"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="btnCloseClick:" destination="UvS-Y1-M9K" eventType="touchUpInside" id="B6r-8b-gUF"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="bVM-Hx-tbo"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="bVM-Hx-tbo" firstAttribute="bottom" secondItem="eBM-VT-q73" secondAttribute="bottom" constant="20" id="HXM-Ga-QZN"/>
+                            <constraint firstItem="eBM-VT-q73" firstAttribute="leading" secondItem="bVM-Hx-tbo" secondAttribute="leading" constant="20" id="L07-JM-doB"/>
+                            <constraint firstAttribute="trailing" secondItem="85x-Eh-r10" secondAttribute="trailing" id="Xeg-OH-U99"/>
+                            <constraint firstItem="85x-Eh-r10" firstAttribute="leading" secondItem="OlU-Vj-tUK" secondAttribute="leading" id="e3h-81-1O9"/>
+                            <constraint firstAttribute="bottom" secondItem="85x-Eh-r10" secondAttribute="bottom" id="iGB-Oj-g8h"/>
+                            <constraint firstItem="85x-Eh-r10" firstAttribute="top" secondItem="OlU-Vj-tUK" secondAttribute="top" id="xNP-BC-eku"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnClose" destination="eBM-VT-q73" id="zUN-uO-KD3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iTO-eg-tvd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2817" y="67"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="c1p-uO-XKh">

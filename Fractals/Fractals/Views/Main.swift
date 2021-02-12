@@ -18,4 +18,9 @@ class Main: UIViewController {
         let mandelbrot = self.storyboard!.instantiateViewController(withIdentifier: "MandelbrotSceen") as! MandelbrotSceen
         self.navigationController!.pushViewController(mandelbrot, animated: true)
     }
+    
+    @IBAction func btnJuliaClick(_ sender: Any) {
+        let julia = self.storyboard!.instantiateViewController(withIdentifier: "JuliaScreen") as! JuliaScreen
+        self.navigationController!.pushViewController(julia, animated: true)
+    }
 }
