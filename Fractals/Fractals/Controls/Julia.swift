@@ -50,22 +50,16 @@ class Julia: BaseMetalView {
     // MARK: - utility methods
     func addColor2Vertex(vertex: inout Vertex, n: Int) {
         var color = simd_float3.zero
-        if (n == iterationsCount) {
-            color.x = 0.2
-            color.y = 0.4
-            color.z = 0.8
-        } else if (n < 12) {
+        if (n < 30) {
+            color.x = 1.0
+            color.y = 0.0
+            color.z = 0.0
+        } else if (n > iterationsCount - 12) {
             //color = simd_float3.zero
         } else {
-            /* alternative color logic
-            int color = (int)(n * logf(n)) % 256;
-            int color = (int)(n * sinf(n)) % 256;
-            int color = n % 256;
-            */
-            
             let c = Float((n * n + n) % 256)
-            color.x = c / 255.0 + 0.3
-            color.y = c / 255.0 + 0.3
+            color.x = 0.0
+            color.y = c / 255.0 - 0.3
             color.z = 0.0
         }
         
@@ -153,6 +147,21 @@ class Julia: BaseMetalView {
             zx = tmp
             i -= 1
         }
+        
+        /*
+        var i = 0
+        while (i < iterationsCount) {
+            i += 1
+            
+            tmp = zx * zx - zy * zy + cx
+            zy = 2.0 * zx * zy + cy
+            zx = tmp
+            
+            if ((zx * zx + zy * zy) > 4.0) {
+                break
+            }
+        }
+        */
         
         return i
     }

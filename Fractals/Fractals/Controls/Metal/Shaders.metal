@@ -38,5 +38,10 @@ vertex VertexOut basic_vertex(const device VertexIn *vertex_array[[buffer(0)]], 
 }
 
 fragment float4 basic_fragment(VertexOut interpolated[[stage_in]]) {
+    if (interpolated.color.r == 0.0 &&
+        interpolated.color.g == 0.0 &&
+        interpolated.color.b == 0.0) {
+        discard_fragment();
+    }
     return float4(interpolated.color, 1.0);
 }
