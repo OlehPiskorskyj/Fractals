@@ -20,7 +20,15 @@ class Julia: BaseMetalView {
     
     // MARK: - props
     private var mAngle: Float = 0.0
-    private var mFractalIterationsCount: Int = 0
+    private var fractalZoom: Float = 0.0
+    private var moveX: Float = 0.0
+    private var moveY: Float = 0.0
+    private var zx: Float = 0.0
+    private var zy: Float = 0.0
+    private var cx: Float = 0.0
+    private var cy: Float = 0.0
+    private var tmp: Float = 0.0
+    private var iterationsCount: Int = 0
     
     public var zoom: Float = -5.0
     
@@ -39,16 +47,45 @@ class Julia: BaseMetalView {
         super.tearDownMetal()
     }
     
+    // MARK: - utility methods
+    func addColor2Vertex(vertex: inout Vertex, n: Int) {
+        var color = simd_float3.zero
+        if (n == iterationsCount) {
+            color.x = 0.2
+            color.y = 0.4
+            color.z = 0.8
+        } else if (n < 12) {
+            //color = simd_float3.zero
+        } else {
+            /* alternative color logic
+            int color = (int)(n * logf(n)) % 256;
+            int color = (int)(n * sinf(n)) % 256;
+            int color = n % 256;
+            */
+            
+            let c = Float((n * n + n) % 256)
+            color.x = c / 255.0 + 0.3
+            color.y = c / 255.0 + 0.3
+            color.z = 0.0
+        }
+        
+        vertex.r = color.x
+        vertex.g = color.y
+        vertex.b = color.z
+    }
+    
     // MARK: - fractal logic
     func createJulia() {
         mAngle = Float.pi / 2.0
         mVertexCount = 0
         mIndexCount = 0
 
-        //mFractalZoom = 1.0
-        //mFractalX = -0.5
-        //mFractalY = 0.0
-        mFractalIterationsCount = 250
+        fractalZoom = 1.0
+        moveX = 0.0
+        moveY = 0.0
+        cx = -0.7
+        cy = 0.27015
+        iterationsCount = 255
         
         let delta = 1.0 / Float(Consts.FRACTAL_SIZE)
         
@@ -61,13 +98,13 @@ class Julia: BaseMetalView {
                 let v4m = self.julia(x: x + 1, y: y)
                 
                 var v1 = Vertex(x: Float(x) * delta, y: Float(v1m) / 255.0, z: Float(y + 1) * delta, r: 1.0, g: 0.0, b: 0.0)
-                //self.addColor2Vertex(vertex: &v1, n: v1m)
+                self.addColor2Vertex(vertex: &v1, n: v1m)
                 var v2 = Vertex(x: Float(x) * delta, y: Float(v2m) / 255.0, z: Float(y) * delta, r: 1.0, g: 0.0, b: 0.0)
-                //self.addColor2Vertex(vertex: &v2, n: v2m)
+                self.addColor2Vertex(vertex: &v2, n: v2m)
                 var v3 = Vertex(x: Float(x + 1) * delta, y: Float(v3m) / 255.0, z: Float(y + 1) * delta, r: 1.0, g: 0.0, b: 0.0)
-                //self.addColor2Vertex(vertex: &v3, n: v3m)
+                self.addColor2Vertex(vertex: &v3, n: v3m)
                 var v4 = Vertex(x: Float(x + 1) * delta, y: Float(v4m) / 255.0, z: Float(y) * delta, r: 1.0, g: 0.0, b: 0.0)
-                //self.addColor2Vertex(vertex: &v4, n: v4m)
+                self.addColor2Vertex(vertex: &v4, n: v4m)
                 
                 var index1 = mVertexCount
                 var index2 = mVertexCount + 1
@@ -102,7 +139,22 @@ class Julia: BaseMetalView {
     }
 
     func julia(x: Int, y: Int) -> Int {
-        return mFractalIterationsCount
+        zx = 1.5 * Float(x - Consts.FRACTAL_SIZE / 2) / (0.5 * fractalZoom * Float(Consts.FRACTAL_SIZE)) + moveX
+        zy = 1.0 * Float(y - Consts.FRACTAL_SIZE / 2) / (0.5 * fractalZoom * Float(Consts.FRACTAL_SIZE)) + moveY
+        
+        var i = iterationsCount
+        while (i > 1) {
+            if ((zx * zx + zy * zy) > 4.0) {
+                break
+            }
+            
+            tmp = zx * zx - zy * zy + cx
+            zy = 2.0 * zx * zy + cy
+            zx = tmp
+            i -= 1
+        }
+        
+        return i
     }
 
     // MARK: - other methods
