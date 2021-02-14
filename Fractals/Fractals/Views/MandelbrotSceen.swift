@@ -11,29 +11,31 @@ class MandelbrotSceen: UIViewController {
     
     // MARK: - props
     @IBOutlet weak var viewMandelbrot: Mandelbrot!
-    @IBOutlet weak var btnClose: UIButton!
-    @IBOutlet weak var btnMinus: MRButton!
-    @IBOutlet weak var btnAdd: MRButton!
+    @IBOutlet weak var viewGamePad: MRGamePad!
     
     // MARK: - view controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        btnClose.backgroundColor = .clear
-        btnClose.layer.borderWidth = 0.5
-        btnClose.layer.borderColor = UIColor.systemRed.cgColor
+        viewGamePad.closeClicked = { [weak self] in
+            self?.navigationController?.popToRootViewController(animated: true)
+        }
         
-        btnMinus.longPressAction = { [weak self] in
+        viewGamePad.minusAction = { [weak self] in
             self?.viewMandelbrot.zoom -= 0.05
         }
         
-        btnAdd.longPressAction = { [weak self] in
+        viewGamePad.addAction = { [weak self] in
             self?.viewMandelbrot.zoom += 0.05
+        }
+        
+        viewGamePad.rotationChandeAction = { [weak self] in
+            self?.rotationSwichChanged()
         }
     }
     
-    // MARK: - events
-    @IBAction func btnCloseClick(_ sender: Any) {
-        self.navigationController!.popViewController(animated: true)
+    // MARK: - other methods
+    func rotationSwichChanged() {
+        viewMandelbrot.rotating = !viewMandelbrot.rotating
     }
 }
