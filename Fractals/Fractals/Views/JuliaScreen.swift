@@ -11,6 +11,7 @@ class JuliaScreen: UIViewController {
 
     // MARK: - props
     @IBOutlet weak var viewJulia: Julia!
+    @IBOutlet weak var viewUI: UIView!
     @IBOutlet weak var btnClose: UIButton!
     @IBOutlet weak var btnAdd: MRButton!
     @IBOutlet weak var btnMinus: MRButton!
@@ -35,5 +36,13 @@ class JuliaScreen: UIViewController {
     // MARK: - events
     @IBAction func btnCloseClick(_ sender: Any) {
         self.navigationController!.popViewController(animated: true)
+    }
+    
+    @IBAction func swchRotationChanged(_ sender: Any) {
+        viewJulia.rotating = !viewJulia.rotating
+    }
+    
+    @IBAction func swchTemp(_ sender: Any) {
+        viewUI.isHidden = true
     }
 }

@@ -90,7 +90,7 @@ class BaseMetalView: MTKView {
     }
     
     // MARK: - utilities
-    func refreshDrawableData(aspectRatio: Float) {
+    func updateProjectionMatrix(aspectRatio: Float) {
         let projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), fabsf(aspectRatio), 0.1, 100.0);
         sceneMatrices.projection = projectionMatrix
         textureDepth = nil

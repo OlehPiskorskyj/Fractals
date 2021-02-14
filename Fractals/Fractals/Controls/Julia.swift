@@ -179,7 +179,7 @@ class Julia: BaseMetalView {
 
 extension Julia: MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        super.refreshDrawableData(aspectRatio: Float(view.frame.width / view.frame.height))
+        super.updateProjectionMatrix(aspectRatio: Float(view.frame.width / view.frame.height))
     }
     
     func draw(in view: MTKView) {
