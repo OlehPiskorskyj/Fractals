@@ -19,7 +19,6 @@ class Julia: BaseMetalView {
     }
     
     // MARK: - props
-    private var mAngle: Float = 0.0
     private var fractalZoom: Float = 0.0
     private var moveX: Float = 0.0
     private var moveY: Float = 0.0
@@ -29,8 +28,6 @@ class Julia: BaseMetalView {
     private var cy: Float = 0.0
     private var tmp: Float = 0.0
     private var iterationsCount: Int = 0
-    
-    public var zoom: Float = -5.0
     
     // MARK: - ctors
     override public init(frame frameRect: CGRect, device: MTLDevice?) {
@@ -70,9 +67,9 @@ class Julia: BaseMetalView {
     
     // MARK: - fractal logic
     func createJulia() {
-        mAngle = Float.pi / 2.0
-        mVertexCount = 0
-        mIndexCount = 0
+        angle = Float.pi / 2.0
+        vertexCount = 0
+        indexCount = 0
 
         fractalZoom = 1.0
         moveX = 0.0
@@ -100,17 +97,17 @@ class Julia: BaseMetalView {
                 var v4 = Vertex(x: Float(x + 1) * delta, y: Float(v4m) / 255.0, z: Float(y) * delta, r: 1.0, g: 0.0, b: 0.0)
                 self.addColor2Vertex(vertex: &v4, n: v4m)
                 
-                var index1 = mVertexCount
-                var index2 = mVertexCount + 1
-                var index3 = mVertexCount + 1
-                var index4 = mVertexCount + 2
-                var index5 = mVertexCount + 2
-                var index6 = mVertexCount
+                var index1 = vertexCount
+                var index2 = vertexCount + 1
+                var index3 = vertexCount + 1
+                var index4 = vertexCount + 2
+                var index5 = vertexCount + 2
+                var index6 = vertexCount
                 
-                var index7 = mVertexCount + 1
-                var index8 = mVertexCount + 3
-                var index9 = mVertexCount + 3
-                var index10 = mVertexCount + 2
+                var index7 = vertexCount + 1
+                var index8 = vertexCount + 3
+                var index9 = vertexCount + 3
+                var index10 = vertexCount + 2
                 
                 self.addIndex(index: &index1)
                 self.addIndex(index: &index2)
@@ -168,8 +165,8 @@ class Julia: BaseMetalView {
 
     // MARK: - other methods
     override func internalInit() {
-        mMaxVertexCount = Consts.FRACTAL_MAX_VERTICES
-        mMaxIndexCount = Consts.FRACTAL_MAX_INDICES
+        maxVertexCount = Consts.FRACTAL_MAX_VERTICES
+        maxIndexCount = Consts.FRACTAL_MAX_INDICES
         
         super.internalInit()
         self.delegate = self
@@ -182,10 +179,7 @@ class Julia: BaseMetalView {
 
 extension Julia: MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        let projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), fabsf(Float(view.frame.width / view.frame.height)), 0.1, 100.0);
-        mSceneMatrices.projectionMatrix = projectionMatrix
-        mTextureDepth = nil
-        mTexture = nil
+        super.refreshDrawableData(aspectRatio: Float(view.frame.width / view.frame.height))
     }
     
     func draw(in view: MTKView) {
@@ -194,53 +188,33 @@ extension Julia: MTKViewDelegate {
         #else
         
         guard let drawable = view.currentDrawable else { return }
-        
-        if (mTexture == nil) {
-            mTexture = self.createAliasingTexture(texture: drawable.texture)
-        }
-        
-        if (mTextureDepth == nil) {
-            mTextureDepth = self.createDepthTexture(texture: drawable.texture)
-        }
-        
-        let depthAttachementTexureDescriptor = MTLRenderPassDepthAttachmentDescriptor()
-        depthAttachementTexureDescriptor.clearDepth = 1.0
-        depthAttachementTexureDescriptor.loadAction = .clear
-        depthAttachementTexureDescriptor.storeAction = .dontCare
-        depthAttachementTexureDescriptor.texture = mTextureDepth
-        
-        let renderPassDescriptor = MTLRenderPassDescriptor()
-        renderPassDescriptor.colorAttachments[0].texture = mTexture
-        renderPassDescriptor.colorAttachments[0].resolveTexture = drawable.texture
-        renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-        renderPassDescriptor.colorAttachments[0].storeAction = .multisampleResolve
-        renderPassDescriptor.depthAttachment = depthAttachementTexureDescriptor
-        
-        guard let commandBuffer = mCommandQueue.makeCommandBuffer() else { return }
+        let renderPassDescriptor = super.createRenderPassDescriptor(drawable: drawable)
+        guard let commandBuffer = commandQueue.makeCommandBuffer() else { return }
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
         
-        mLookAt = GLKMatrix4MakeLookAt(0.0, 2.0 - self.zoom, 4.0 - self.zoom, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        lookAt = GLKMatrix4MakeLookAt(0.0, 2.0 - self.zoom, 4.0 - self.zoom, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
         
-        var modelView = GLKMatrix4Multiply(GLKMatrix4MakeScale(10.0, 1.0, 10.0), GLKMatrix4MakeRotation(mAngle, 0.0, 1.0, 0.0))
+        var modelView = GLKMatrix4Multiply(GLKMatrix4MakeScale(10.0, 1.0, 10.0), GLKMatrix4MakeRotation(angle, 0.0, 1.0, 0.0))
         modelView = GLKMatrix4Multiply(modelView, GLKMatrix4MakeTranslation(-0.5, 0.0, -0.5))
-        mSceneMatrices.modelviewMatrix = GLKMatrix4Multiply(mLookAt, modelView)
-        let uniformBufferSize = MemoryLayout.size(ofValue: mSceneMatrices)
-        mUniformBuffer = mDevice.makeBuffer(bytes: &mSceneMatrices, length: uniformBufferSize, options: .storageModeShared)
-        renderEncoder.setVertexBuffer(mUniformBuffer, offset: 0, index: 1)
-        renderEncoder.setDepthStencilState(mDepthStencilState)
-        renderEncoder.setRenderPipelineState(mPipelineState)
+        sceneMatrices.modelview = GLKMatrix4Multiply(lookAt, modelView)
+        let uniformBufferSize = MemoryLayout.size(ofValue: sceneMatrices)
+        uniformBuffer = metalDevice.makeBuffer(bytes: &sceneMatrices, length: uniformBufferSize, options: .storageModeShared)
+        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
+        renderEncoder.setDepthStencilState(depthStencilState)
+        renderEncoder.setRenderPipelineState(pipelineState)
         
-        if (mVertexCount > 0) {
-            renderEncoder.setVertexBuffer(mVertexBuffer, offset: 0, index: 0)
-            renderEncoder.drawIndexedPrimitives(type: .line, indexCount: Int(mIndexCount), indexType: .uint32, indexBuffer: mIndexBuffer, indexBufferOffset: 0)
+        if (vertexCount > 0) {
+            renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+            renderEncoder.drawIndexedPrimitives(type: .line, indexCount: Int(indexCount), indexType: .uint32, indexBuffer: indexBuffer, indexBufferOffset: 0)
         }
         
         renderEncoder.endEncoding()
         commandBuffer.present(drawable)
         commandBuffer.commit()
         
-        mAngle += 0.01
+        if (self.rotating) {
+            angle += 0.01
+        }
         
         #endif
     }

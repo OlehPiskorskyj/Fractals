@@ -22,31 +22,35 @@ struct Vertex {
 }
 
 struct SceneMatrices {
-    var projectionMatrix: GLKMatrix4 = GLKMatrix4Identity
-    var modelviewMatrix: GLKMatrix4 = GLKMatrix4Identity
+    var projection: GLKMatrix4 = GLKMatrix4Identity
+    var modelview: GLKMatrix4 = GLKMatrix4Identity
 }
 
 
 class BaseMetalView: MTKView {
     
     // MARK: - props
-    public var mDevice: MTLDevice!
-    public var mCommandQueue: MTLCommandQueue!
-    public var mPipelineState: MTLRenderPipelineState!
-    public var mDepthStencilState: MTLDepthStencilState!
-    public var mTextureDepth: MTLTexture? = nil
-    public var mTexture: MTLTexture? = nil
+    public var metalDevice: MTLDevice!
+    public var commandQueue: MTLCommandQueue!
+    public var pipelineState: MTLRenderPipelineState!
+    public var depthStencilState: MTLDepthStencilState!
+    private var textureDepth: MTLTexture? = nil
+    private var texture: MTLTexture? = nil
     
-    public var mSceneMatrices = SceneMatrices()
-    public var mUniformBuffer: MTLBuffer!
-    public var mLookAt: GLKMatrix4 = GLKMatrix4Identity
+    public var sceneMatrices = SceneMatrices()
+    public var uniformBuffer: MTLBuffer!
+    public var lookAt: GLKMatrix4 = GLKMatrix4Identity
     
-    public var mVertexBuffer: MTLBuffer!
-    public var mIndexBuffer: MTLBuffer!
-    public var mVertexCount: UInt32 = 0
-    public var mIndexCount: UInt32 = 0
-    public var mMaxVertexCount = 0
-    public var mMaxIndexCount = 0
+    public var vertexBuffer: MTLBuffer!
+    public var indexBuffer: MTLBuffer!
+    public var vertexCount: UInt32 = 0
+    public var indexCount: UInt32 = 0
+    public var maxVertexCount = 0
+    public var maxIndexCount = 0
+    
+    public var rotating: Bool = true
+    public var angle: Float = 0.0
+    public var zoom: Float = -5.0
     
     
     //public var mCurrentOrientation: UIDeviceOrientation = .unknown
@@ -68,24 +72,57 @@ class BaseMetalView: MTKView {
     }
     */
     
-    // MARK: - utility methods
+    // MARK: - vertex logic
     func addVertex(vertex: inout Vertex) {
-        if (mVertexCount < mMaxVertexCount) {
+        if (vertexCount < maxVertexCount) {
             let vertexSize = MemoryLayout<Vertex>.size
-            memcpy(mVertexBuffer.contents() + vertexSize * Int(mVertexCount), &vertex, vertexSize)
-            mVertexCount += 1
+            memcpy(vertexBuffer.contents() + vertexSize * Int(vertexCount), &vertex, vertexSize)
+            vertexCount += 1
         }
     }
     
     func addIndex(index: inout UInt32) {
-        if (mIndexCount < mMaxIndexCount) {
+        if (indexCount < maxIndexCount) {
             let indexSize = MemoryLayout<UInt32>.size
-            memcpy(mIndexBuffer.contents() + indexSize * Int(mIndexCount), &index, indexSize)
-            mIndexCount += 1
+            memcpy(indexBuffer.contents() + indexSize * Int(indexCount), &index, indexSize)
+            indexCount += 1
         }
     }
     
-    // MARK: - texture utilities
+    // MARK: - utilities
+    func refreshDrawableData(aspectRatio: Float) {
+        let projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), fabsf(aspectRatio), 0.1, 100.0);
+        sceneMatrices.projection = projectionMatrix
+        textureDepth = nil
+        texture = nil
+    }
+    
+    func createRenderPassDescriptor(drawable: CAMetalDrawable) -> MTLRenderPassDescriptor {
+        if (texture == nil) {
+            texture = self.createAliasingTexture(texture: drawable.texture)
+        }
+        
+        if (textureDepth == nil) {
+            textureDepth = self.createDepthTexture(texture: drawable.texture)
+        }
+        
+        let depthAttachementTexureDescriptor = MTLRenderPassDepthAttachmentDescriptor()
+        depthAttachementTexureDescriptor.clearDepth = 1.0
+        depthAttachementTexureDescriptor.loadAction = .clear
+        depthAttachementTexureDescriptor.storeAction = .dontCare
+        depthAttachementTexureDescriptor.texture = textureDepth
+        
+        let renderPassDescriptor = MTLRenderPassDescriptor()
+        renderPassDescriptor.colorAttachments[0].texture = texture
+        renderPassDescriptor.colorAttachments[0].resolveTexture = drawable.texture
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        renderPassDescriptor.colorAttachments[0].storeAction = .multisampleResolve
+        renderPassDescriptor.depthAttachment = depthAttachementTexureDescriptor
+        
+        return renderPassDescriptor
+    }
+    
     func createAliasingTexture(texture: MTLTexture) -> MTLTexture? {
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.pixelFormat = texture.pixelFormat
@@ -94,7 +131,7 @@ class BaseMetalView: MTKView {
         textureDescriptor.textureType = .type2DMultisample
         textureDescriptor.usage = [.renderTarget, .shaderRead]
         textureDescriptor.sampleCount = self.sampleCount
-        return mDevice.makeTexture(descriptor: textureDescriptor)
+        return metalDevice.makeTexture(descriptor: textureDescriptor)
     }
     
     func createDepthTexture(texture: MTLTexture) -> MTLTexture? {
@@ -104,7 +141,7 @@ class BaseMetalView: MTKView {
         depthTextureDescriptor.storageMode = .private
         depthTextureDescriptor.resourceOptions = [.storageModePrivate]
         depthTextureDescriptor.sampleCount = 4
-        return mDevice.makeTexture(descriptor: depthTextureDescriptor)
+        return metalDevice.makeTexture(descriptor: depthTextureDescriptor)
     }
     
     // MARK: - public methods
@@ -113,15 +150,15 @@ class BaseMetalView: MTKView {
     }
     
     public func tearDownMetal() {
-        //mVertexBuffer.setPurgeableState(.empty)
-        //mIndexBuffer.setPurgeableState(.empty)
-        //mTextureDepth?.setPurgeableState(.empty)
-        //mTexture?.setPurgeableState(.empty)
+        //vertexBuffer.setPurgeableState(.empty)
+        //indexBuffer.setPurgeableState(.empty)
+        //textureDepth?.setPurgeableState(.empty)
+        //texture?.setPurgeableState(.empty)
         
-        mVertexBuffer = nil
-        mIndexBuffer = nil
-        mTextureDepth = nil
-        mTexture = nil
+        vertexBuffer = nil
+        indexBuffer = nil
+        textureDepth = nil
+        texture = nil
     }
     
     // MARK: - other methods
@@ -142,25 +179,24 @@ class BaseMetalView: MTKView {
     }
     
     func setupMetal() {
-        mDevice = MTLCreateSystemDefaultDevice()
-        mCommandQueue = mDevice.makeCommandQueue()
-        self.device = mDevice
-        //self.delegate = self
+        metalDevice = MTLCreateSystemDefaultDevice()
+        commandQueue = metalDevice.makeCommandQueue()
+        self.device = metalDevice
         
-        mLookAt = GLKMatrix4MakeLookAt(0.0, 2.0, 4.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        lookAt = GLKMatrix4MakeLookAt(0.0, 2.0, 4.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
         
         let projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), fabsf(Float(self.bounds.width / self.bounds.height)), 0.1, 100.0);
-        mSceneMatrices.projectionMatrix = projectionMatrix
+        sceneMatrices.projection = projectionMatrix
         
-        var vertexBuffer = Array<Vertex>(repeating: Vertex.zero(), count: mMaxVertexCount)
-        let vertexBufferSize = vertexBuffer.count * MemoryLayout<Vertex>.size
-        mVertexBuffer = mDevice.makeBuffer(bytes: &vertexBuffer, length: vertexBufferSize, options: .storageModeShared)
+        var verBuffer = Array<Vertex>(repeating: Vertex.zero(), count: maxVertexCount)
+        var bufferSize = verBuffer.count * MemoryLayout<Vertex>.size
+        vertexBuffer = metalDevice.makeBuffer(bytes: &verBuffer, length: bufferSize, options: .storageModeShared)
         
-        var indexBuffer = Array<UInt32>(repeating: 0, count: mMaxIndexCount)
-        let indexBufferSize = indexBuffer.count * MemoryLayout<UInt32>.size
-        mIndexBuffer = mDevice.makeBuffer(bytes: &indexBuffer, length: indexBufferSize, options: .storageModeShared)
+        var indBuffer = Array<UInt32>(repeating: 0, count: maxIndexCount)
+        bufferSize = indBuffer.count * MemoryLayout<UInt32>.size
+        indexBuffer = metalDevice.makeBuffer(bytes: &indBuffer, length: bufferSize, options: .storageModeShared)
         
-        guard let defaultLibrary = mDevice.makeDefaultLibrary() else { return }
+        guard let defaultLibrary = metalDevice.makeDefaultLibrary() else { return }
         let fragmentProgram = defaultLibrary.makeFunction(name: "basic_fragment")
         let vertexProgram = defaultLibrary.makeFunction(name: "basic_vertex")
         
@@ -172,14 +208,14 @@ class BaseMetalView: MTKView {
         pipelineStateDescriptor.sampleCount = self.sampleCount
         pipelineStateDescriptor.depthAttachmentPixelFormat = self.depthStencilPixelFormat
         
-        mPipelineState = try! mDevice.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
+        pipelineState = try! metalDevice.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
         
         let depthStencilDescriptor = MTLDepthStencilDescriptor()
         depthStencilDescriptor.depthCompareFunction = .less
         depthStencilDescriptor.isDepthWriteEnabled = true
-        mDepthStencilState = mDevice.makeDepthStencilState(descriptor: depthStencilDescriptor)
+        depthStencilState = metalDevice.makeDepthStencilState(descriptor: depthStencilDescriptor)
         
-        mVertexCount = 0
-        mIndexCount = 0
+        vertexCount = 0
+        indexCount = 0
     }
 }
