@@ -12,8 +12,13 @@ class MRGamePad: UIView {
     // MARK: - props
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var btnClose: UIButton!
+    @IBOutlet weak var btnMinus: MRButton!
+    @IBOutlet weak var btnAdd: MRButton!
     
     public var closeClicked: (() -> ())? = nil
+    public var minusAction: (() -> ())? = nil
+    public var addAction: (() -> ())? = nil
+    public var rotationChandeAction: (() -> ())? = nil
     
     // MARK: - ctors
     override init(frame: CGRect) {
@@ -31,6 +36,10 @@ class MRGamePad: UIView {
         self.closeClicked?()
     }
     
+    @IBAction func swchRotationChanged(_ sender: Any) {
+        self.rotationChandeAction?()
+    }
+    
     // MARK: - other methods
     private func internalInit() {
         Bundle.main.loadNibNamed("MRGamePad", owner: self, options: nil)
@@ -42,15 +51,12 @@ class MRGamePad: UIView {
         btnClose.layer.borderWidth = 0.5
         btnClose.layer.borderColor = UIColor.systemRed.cgColor
         
-        /*
-        btnTemplate.addTarget(self, action: #selector(buttonClicked(sender:)), for: .touchUpInside)
-        btnRepeat.addTarget(self, action: #selector(buttonClicked(sender:)), for: .touchUpInside)
-        btnMonth.addTarget(self, action: #selector(buttonClicked(sender:)), for: .touchUpInside)
-        btnDay.addTarget(self, action: #selector(buttonClicked(sender:)), for: .touchUpInside)
-        btnWeekDay.addTarget(self, action: #selector(buttonClicked(sender:)), for: .touchUpInside)
-        btnStart.addTarget(self, action: #selector(buttonClicked(sender:)), for: .touchUpInside)
-        btnEnd.addTarget(self, action: #selector(buttonClicked(sender:)), for: .touchUpInside)
-        */
+        btnMinus.longPressAction = { [weak self] in
+            self?.minusAction?()
+        }
+        
+        btnAdd.longPressAction = { [weak self] in
+            self?.addAction?()
+        }
     }
-
 }

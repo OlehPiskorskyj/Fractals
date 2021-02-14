@@ -11,38 +11,31 @@ class JuliaScreen: UIViewController {
 
     // MARK: - props
     @IBOutlet weak var viewJulia: Julia!
-    @IBOutlet weak var viewUI: UIView!
-    @IBOutlet weak var btnClose: UIButton!
-    @IBOutlet weak var btnAdd: MRButton!
-    @IBOutlet weak var btnMinus: MRButton!
+    @IBOutlet weak var viewGamePad: MRGamePad!
     
     // MARK: - view controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        btnClose.backgroundColor = .clear
-        btnClose.layer.borderWidth = 0.5
-        btnClose.layer.borderColor = UIColor.systemRed.cgColor
+        viewGamePad.closeClicked = { [weak self] in
+            self?.navigationController?.popToRootViewController(animated: true)
+        }
         
-        btnMinus.longPressAction = { [weak self] in
+        viewGamePad.minusAction = { [weak self] in
             self?.viewJulia.zoom -= 0.05
         }
         
-        btnAdd.longPressAction = { [weak self] in
+        viewGamePad.addAction = { [weak self] in
             self?.viewJulia.zoom += 0.05
+        }
+        
+        viewGamePad.rotationChandeAction = { [weak self] in
+            self?.rotationSwichChanged()
         }
     }
     
-    // MARK: - events
-    @IBAction func btnCloseClick(_ sender: Any) {
-        self.navigationController!.popViewController(animated: true)
-    }
-    
-    @IBAction func swchRotationChanged(_ sender: Any) {
+    // MARK: - other methods
+    func rotationSwichChanged() {
         viewJulia.rotating = !viewJulia.rotating
-    }
-    
-    @IBAction func swchTemp(_ sender: Any) {
-        viewUI.isHidden = true
     }
 }

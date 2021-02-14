@@ -10,7 +10,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MRGamePad" customModule="Fractals" customModuleProvider="target">
             <connections>
+                <outlet property="btnAdd" destination="a3A-GF-hEv" id="bdL-4B-PFW"/>
                 <outlet property="btnClose" destination="6Pb-BK-IK2" id="NiY-fP-W7g"/>
+                <outlet property="btnMinus" destination="tsi-pL-qi4" id="VlJ-bS-SAn"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="Fx6-tx-oaZ"/>
             </connections>
         </placeholder>
@@ -59,6 +61,9 @@
                             <rect key="frame" x="25.5" y="34.5" width="51" height="31"/>
                             <color key="tintColor" systemColor="systemBlueColor"/>
                             <color key="onTintColor" systemColor="systemBlueColor"/>
+                            <connections>
+                                <action selector="swchRotationChanged:" destination="-1" eventType="valueChanged" id="LmC-up-T74"/>
+                            </connections>
                         </switch>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rotation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0tV-k6-WMo">
                             <rect key="frame" x="16.5" y="79" width="67" height="21"/>
