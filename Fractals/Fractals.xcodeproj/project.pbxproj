@@ -20,6 +20,8 @@
 		037B395725CF706D002F847B /* Mandelbrot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B395625CF706D002F847B /* Mandelbrot.swift */; };
 		0399A89F25D4568A0092F776 /* BaseMetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0399A89E25D4568A0092F776 /* BaseMetalView.swift */; };
 		0399A8A325D460560092F776 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 0399A8A225D460560092F776 /* Shaders.metal */; };
+		03F7B9A025D9B3B2003B1DAA /* MRGamePad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F7B99F25D9B3B2003B1DAA /* MRGamePad.swift */; };
+		03F7B9A325D9B3C8003B1DAA /* MRGamePad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03F7B9A225D9B3C8003B1DAA /* MRGamePad.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		037B395625CF706D002F847B /* Mandelbrot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mandelbrot.swift; sourceTree = "<group>"; };
 		0399A89E25D4568A0092F776 /* BaseMetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMetalView.swift; sourceTree = "<group>"; };
 		0399A8A225D460560092F776 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		03F7B99F25D9B3B2003B1DAA /* MRGamePad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRGamePad.swift; sourceTree = "<group>"; };
+		03F7B9A225D9B3C8003B1DAA /* MRGamePad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MRGamePad.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,7 @@
 		03480E5525D2F3420088E5B1 /* UserInterface */ = {
 			isa = PBXGroup;
 			children = (
+				03F7B99E25D9B377003B1DAA /* MRGamePad */,
 				03480E5625D2F3660088E5B1 /* MRButton.swift */,
 			);
 			path = UserInterface;
@@ -126,6 +131,15 @@
 				0399A8A225D460560092F776 /* Shaders.metal */,
 			);
 			path = Metal;
+			sourceTree = "<group>";
+		};
+		03F7B99E25D9B377003B1DAA /* MRGamePad */ = {
+			isa = PBXGroup;
+			children = (
+				03F7B99F25D9B3B2003B1DAA /* MRGamePad.swift */,
+				03F7B9A225D9B3C8003B1DAA /* MRGamePad.xib */,
+			);
+			path = MRGamePad;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,6 +199,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03F7B9A325D9B3C8003B1DAA /* MRGamePad.xib in Resources */,
 				0324F75425CF67210029943C /* LaunchScreen.storyboard in Resources */,
 				0324F75125CF67210029943C /* Assets.xcassets in Resources */,
 				0324F74F25CF671E0029943C /* Main.storyboard in Resources */,
@@ -201,6 +216,7 @@
 				0324F74825CF671E0029943C /* AppDelegate.swift in Sources */,
 				033925A025D717DF0056E84D /* JuliaScreen.swift in Sources */,
 				0324F76625CF6C350029943C /* Main.swift in Sources */,
+				03F7B9A025D9B3B2003B1DAA /* MRGamePad.swift in Sources */,
 				0324F74A25CF671E0029943C /* SceneDelegate.swift in Sources */,
 				0324F76A25CF6D8F0029943C /* MandelbrotSceen.swift in Sources */,
 				037B395725CF706D002F847B /* Mandelbrot.swift in Sources */,
