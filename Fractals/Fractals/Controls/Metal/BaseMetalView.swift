@@ -48,10 +48,9 @@ class BaseMetalView: MTKView {
     public var maxVertexCount = 0
     public var maxIndexCount = 0
     
-    public var rotating: Bool = true
+    public var rotating: Bool = false
     public var angle: Float = 0.0
     public var zoom: Float = -5.0
-    
     
     //public var mCurrentOrientation: UIDeviceOrientation = .unknown
     //public var isUpdateWithOrientation: Bool = false
