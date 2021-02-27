@@ -81,7 +81,7 @@ class Mandelbrot: BaseMetalView {
         mFractalZoom = 1.0
         mFractalX = -0.5
         mFractalY = 0.0
-        mFractalIterationsCount = 250
+        mFractalIterationsCount = 255
         
         let delta = 1.0 / Float(Consts.FRACTAL_SIZE)
         
@@ -133,7 +133,7 @@ class Mandelbrot: BaseMetalView {
             }
         }
     }
-
+    
     func mandelbrot(x: Int, y: Int) -> Int {
         
         // calculate the initial real and imaginary part of z, based on the pixel location and zoom and position values
@@ -167,7 +167,7 @@ class Mandelbrot: BaseMetalView {
         
         return i
     }
-    
+   
     // MARK: - other methods
     override func internalInit() {
         maxVertexCount = Consts.FRACTAL_MAX_VERTICES

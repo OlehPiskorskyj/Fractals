@@ -26,7 +26,6 @@ struct SceneMatrices {
     var modelview: GLKMatrix4 = GLKMatrix4Identity
 }
 
-
 class BaseMetalView: MTKView {
     
     // MARK: - props
