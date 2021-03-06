@@ -34,6 +34,11 @@ class JuliaScreen: UIViewController {
         }
     }
     
+    @IBAction func removeGamePadClick(_ sender: Any) {
+        viewGamePad.alpha = 0.0
+    }
+    
+    
     // MARK: - other methods
     func rotationSwichChanged() {
         viewJulia.rotating = !viewJulia.rotating

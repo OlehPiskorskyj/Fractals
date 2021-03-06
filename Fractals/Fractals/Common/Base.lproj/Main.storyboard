@@ -113,6 +113,18 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GbG-Vt-7Rv">
+                                <rect key="frame" x="20" y="64" width="100" height="100"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="Ov5-OB-bmz"/>
+                                    <constraint firstAttribute="height" constant="100" id="VQf-dM-QWn"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="removeGamePadClick:" destination="UvS-Y1-M9K" eventType="touchUpInside" id="5h3-5L-ABN"/>
+                                    <action selector="test:" destination="UvS-Y1-M9K" eventType="touchUpInside" id="lWE-ci-dsR"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bVM-Hx-tbo"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -123,6 +135,8 @@
                             <constraint firstAttribute="trailing" secondItem="85x-Eh-r10" secondAttribute="trailing" id="Xeg-OH-U99"/>
                             <constraint firstItem="85x-Eh-r10" firstAttribute="leading" secondItem="OlU-Vj-tUK" secondAttribute="leading" id="e3h-81-1O9"/>
                             <constraint firstAttribute="bottom" secondItem="85x-Eh-r10" secondAttribute="bottom" id="iGB-Oj-g8h"/>
+                            <constraint firstItem="GbG-Vt-7Rv" firstAttribute="top" secondItem="bVM-Hx-tbo" secondAttribute="top" constant="20" id="oLg-zf-ia5"/>
+                            <constraint firstItem="GbG-Vt-7Rv" firstAttribute="leading" secondItem="bVM-Hx-tbo" secondAttribute="leading" constant="20" id="obS-V1-o9M"/>
                             <constraint firstItem="Jzx-uc-GsS" firstAttribute="top" secondItem="bVM-Hx-tbo" secondAttribute="top" id="vE5-kn-eWq"/>
                             <constraint firstItem="85x-Eh-r10" firstAttribute="top" secondItem="OlU-Vj-tUK" secondAttribute="top" id="xNP-BC-eku"/>
                         </constraints>
