@@ -10,9 +10,16 @@ import UIKit
 class MRButton: UIButton {
     
     // MARK: - props
+    private let longPrestGR = UILongPressGestureRecognizer()
     private var timer: Timer? = nil
     
     public var longPressAction: (() -> ())? = nil
+    
+    public var defaultTouchesEnabled: Bool = false {
+        didSet {
+            longPrestGR.cancelsTouchesInView = !defaultTouchesEnabled
+        }
+    }
     
     // MARK: - ctors
     override init(frame: CGRect) {
@@ -32,10 +39,9 @@ class MRButton: UIButton {
         self.layer.borderWidth = 0.5
         self.layer.borderColor = borderColor?.cgColor
         
-        let longPrestGR = UILongPressGestureRecognizer()
         longPrestGR.addTarget(self, action: #selector(buttonLongPress(gesture:)))
         longPrestGR.minimumPressDuration = 0.0
-        longPrestGR.cancelsTouchesInView = true
+        longPrestGR.cancelsTouchesInView = !defaultTouchesEnabled
         self.addGestureRecognizer(longPrestGR)
     }
     

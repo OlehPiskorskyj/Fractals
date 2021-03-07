@@ -17,44 +17,88 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2nI-Z7-uFR">
-                                <rect key="frame" x="40" y="164" width="334" height="50"/>
-                                <color key="backgroundColor" red="0.0" green="0.63137254899999995" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gl8-1Q-iFI">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gWU-sB-SnS">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="429"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2nI-Z7-uFR" customClass="MRButton" customModule="Fractals" customModuleProvider="target">
+                                                <rect key="frame" x="40" y="120" width="334" height="75"/>
+                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="75" id="jL4-Z8-o3b"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <state key="normal" title="Benoît Mandelbrot"/>
+                                                <connections>
+                                                    <action selector="btnMandelbrotClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Z5-a3-yKw"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Uz-Mc-Xm6" customClass="MRButton" customModule="Fractals" customModuleProvider="target">
+                                                <rect key="frame" x="40" y="223" width="334" height="75"/>
+                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="75" id="3z4-pt-DCc"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <state key="normal" title="Gaston Julia"/>
+                                                <connections>
+                                                    <action selector="btnJuliaClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sMN-yX-OUC"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gZF-Bi-N4z" customClass="MRButton" customModule="Fractals" customModuleProvider="target">
+                                                <rect key="frame" x="40" y="326" width="334" height="75"/>
+                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="75" id="74e-69-rTM"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <state key="normal" title="Next Fractal"/>
+                                                <connections>
+                                                    <action selector="btnJuliaClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="t2l-SS-syb"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="2nI-Z7-uFR" firstAttribute="leading" secondItem="gWU-sB-SnS" secondAttribute="leading" constant="40" id="0G4-JC-oOn"/>
+                                            <constraint firstAttribute="trailing" secondItem="gZF-Bi-N4z" secondAttribute="trailing" constant="40" id="2BZ-a7-xii"/>
+                                            <constraint firstItem="2nI-Z7-uFR" firstAttribute="top" secondItem="gWU-sB-SnS" secondAttribute="top" constant="120" id="7Y8-IR-3Of"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="EiV-wy-iae"/>
+                                            <constraint firstItem="gZF-Bi-N4z" firstAttribute="top" secondItem="4Uz-Mc-Xm6" secondAttribute="bottom" constant="28" id="J8F-xw-ao1"/>
+                                            <constraint firstAttribute="trailing" secondItem="2nI-Z7-uFR" secondAttribute="trailing" constant="40" id="aLk-jC-Bs7"/>
+                                            <constraint firstItem="4Uz-Mc-Xm6" firstAttribute="leading" secondItem="gWU-sB-SnS" secondAttribute="leading" constant="40" id="aee-TW-s4I"/>
+                                            <constraint firstAttribute="bottom" secondItem="gZF-Bi-N4z" secondAttribute="bottom" constant="28" id="bbG-Sw-29c"/>
+                                            <constraint firstItem="4Uz-Mc-Xm6" firstAttribute="top" secondItem="2nI-Z7-uFR" secondAttribute="bottom" constant="28" id="jgT-Is-q28"/>
+                                            <constraint firstAttribute="trailing" secondItem="4Uz-Mc-Xm6" secondAttribute="trailing" constant="40" id="o39-Dm-Zes"/>
+                                            <constraint firstItem="gZF-Bi-N4z" firstAttribute="leading" secondItem="gWU-sB-SnS" secondAttribute="leading" constant="40" id="o8e-aH-qdf"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="jL4-Z8-o3b"/>
+                                    <constraint firstAttribute="bottom" secondItem="gWU-sB-SnS" secondAttribute="bottom" id="4GE-I5-1OM"/>
+                                    <constraint firstItem="gWU-sB-SnS" firstAttribute="width" secondItem="Gl8-1Q-iFI" secondAttribute="width" id="DrN-UR-Sea"/>
+                                    <constraint firstItem="gWU-sB-SnS" firstAttribute="top" secondItem="Gl8-1Q-iFI" secondAttribute="top" id="Mw4-nF-SGK"/>
+                                    <constraint firstAttribute="trailing" secondItem="gWU-sB-SnS" secondAttribute="trailing" id="fge-Fd-FBn"/>
+                                    <constraint firstItem="gWU-sB-SnS" firstAttribute="leading" secondItem="Gl8-1Q-iFI" secondAttribute="leading" id="jrP-b1-Q2U"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="Benoît Mandelbrot"/>
-                                <connections>
-                                    <action selector="btnMandelbrotClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Z5-a3-yKw"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Uz-Mc-Xm6">
-                                <rect key="frame" x="40" y="234" width="334" height="50"/>
-                                <color key="backgroundColor" red="0.0" green="0.63137254899999995" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="3z4-pt-DCc"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="Gaston Julia"/>
-                                <connections>
-                                    <action selector="btnJuliaClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sMN-yX-OUC"/>
-                                </connections>
-                            </button>
+                            </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="2nI-Z7-uFR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="23F-5K-sZr"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2nI-Z7-uFR" secondAttribute="trailing" constant="40" id="6i2-aS-2Cy"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4Uz-Mc-Xm6" secondAttribute="trailing" constant="40" id="Cl8-If-bbt"/>
-                            <constraint firstItem="2nI-Z7-uFR" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="120" id="LmS-UH-u4j"/>
-                            <constraint firstItem="4Uz-Mc-Xm6" firstAttribute="top" secondItem="2nI-Z7-uFR" secondAttribute="bottom" constant="20" id="Mjh-Xe-wWU"/>
-                            <constraint firstItem="4Uz-Mc-Xm6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="ePD-EB-rc9"/>
-                            <constraint firstItem="4Uz-Mc-Xm6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zGn-45-fCS"/>
+                            <constraint firstItem="Gl8-1Q-iFI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="S6O-Yn-xx6"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Gl8-1Q-iFI" secondAttribute="bottom" id="bt2-FU-jRj"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Gl8-1Q-iFI" secondAttribute="trailing" id="iYk-05-7SV"/>
+                            <constraint firstItem="Gl8-1Q-iFI" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="zqd-2M-SFV"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Gzo-gh-ldC"/>
+                    <connections>
+                        <outlet property="btnJulia" destination="4Uz-Mc-Xm6" id="Eyk-T7-SMS"/>
+                        <outlet property="btnMandelbrot" destination="2nI-Z7-uFR" id="ciw-Vd-fc4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -77,7 +121,7 @@
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="lSc-sL-8NU"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="ZC5-Sr-emI" firstAttribute="top" secondItem="gal-fa-rwX" secondAttribute="top" id="3OX-gs-Uqk"/>
                             <constraint firstItem="ZC5-Sr-emI" firstAttribute="leading" secondItem="gal-fa-rwX" secondAttribute="leading" id="8US-52-MTT"/>
@@ -127,7 +171,7 @@
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bVM-Hx-tbo"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="bVM-Hx-tbo" firstAttribute="bottom" secondItem="Jzx-uc-GsS" secondAttribute="bottom" id="4Cf-se-tPF"/>
                             <constraint firstItem="Jzx-uc-GsS" firstAttribute="leading" secondItem="bVM-Hx-tbo" secondAttribute="leading" id="NyO-xP-b86"/>
@@ -171,11 +215,8 @@
         </scene>
     </scenes>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGroupedBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
