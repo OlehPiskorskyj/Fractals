@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0306AA2425F6401B00F8C663 /* TreeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0306AA2325F6401B00F8C663 /* TreeScreen.swift */; };
+		0306AA2825F640C800F8C663 /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0306AA2725F640C800F8C663 /* Tree.swift */; };
 		0324F74825CF671E0029943C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F74725CF671E0029943C /* AppDelegate.swift */; };
 		0324F74A25CF671E0029943C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0324F74925CF671E0029943C /* SceneDelegate.swift */; };
 		0324F74F25CF671E0029943C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0324F74D25CF671E0029943C /* Main.storyboard */; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0306AA2325F6401B00F8C663 /* TreeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeScreen.swift; sourceTree = "<group>"; };
+		0306AA2725F640C800F8C663 /* Tree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
 		0324F74425CF671E0029943C /* Fractals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fractals.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0324F74725CF671E0029943C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0324F74925CF671E0029943C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +92,7 @@
 			children = (
 				0324F76925CF6D8F0029943C /* MandelbrotSceen.swift */,
 				0339259F25D717DF0056E84D /* JuliaScreen.swift */,
+				0306AA2325F6401B00F8C663 /* TreeScreen.swift */,
 				0324F76525CF6C350029943C /* Main.swift */,
 			);
 			path = Views;
@@ -111,6 +116,7 @@
 				03480E5525D2F3420088E5B1 /* UserInterface */,
 				037B395625CF706D002F847B /* Mandelbrot.swift */,
 				0339259C25D716E00056E84D /* Julia.swift */,
+				0306AA2725F640C800F8C663 /* Tree.swift */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -220,9 +226,11 @@
 				0324F74A25CF671E0029943C /* SceneDelegate.swift in Sources */,
 				0324F76A25CF6D8F0029943C /* MandelbrotSceen.swift in Sources */,
 				037B395725CF706D002F847B /* Mandelbrot.swift in Sources */,
+				0306AA2425F6401B00F8C663 /* TreeScreen.swift in Sources */,
 				0339259D25D716E00056E84D /* Julia.swift in Sources */,
 				0399A8A325D460560092F776 /* Shaders.metal in Sources */,
 				03480E5725D2F3660088E5B1 /* MRButton.swift in Sources */,
+				0306AA2825F640C800F8C663 /* Tree.swift in Sources */,
 				0399A89F25D4568A0092F776 /* BaseMetalView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

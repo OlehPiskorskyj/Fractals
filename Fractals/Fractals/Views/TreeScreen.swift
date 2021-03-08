@@ -1,17 +1,17 @@
 //
-//  Mandelbrot.swift
+//  TreeScreen.swift
 //  Fractals
 //
-//  Created by Oleh Piskorskyj on 07/02/2021.
+//  Created by Oleh Piskorskyj on 08/03/2021.
 //
 
 import UIKit
 
-class MandelbrotSceen: UIViewController {
+class TreeScreen: UIViewController {
     
     // MARK: - props
     @IBOutlet weak var viewGamePad: MRGamePad!
-    @IBOutlet weak var viewMandelbrot: Mandelbrot!
+    @IBOutlet weak var viewTree: Tree!
     
     // MARK: - view controller life cycle
     override func viewDidLoad() {
@@ -22,11 +22,11 @@ class MandelbrotSceen: UIViewController {
         }
         
         viewGamePad.minusAction = { [weak self] in
-            self?.viewMandelbrot.zoom -= 0.05
+            self?.viewTree.zoom -= 0.05
         }
         
         viewGamePad.addAction = { [weak self] in
-            self?.viewMandelbrot.zoom += 0.05
+            self?.viewTree.zoom += 0.05
         }
         
         viewGamePad.rotationChandeAction = { [weak self] in
@@ -36,6 +36,7 @@ class MandelbrotSceen: UIViewController {
     
     // MARK: - other methods
     func rotationSwichChanged() {
-        viewMandelbrot.rotating = !viewMandelbrot.rotating
+        viewTree.rotating = !viewTree.rotating
     }
+    
 }

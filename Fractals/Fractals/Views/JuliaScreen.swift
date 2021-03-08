@@ -10,8 +10,8 @@ import UIKit
 class JuliaScreen: UIViewController {
 
     // MARK: - props
-    @IBOutlet weak var viewJulia: Julia!
     @IBOutlet weak var viewGamePad: MRGamePad!
+    @IBOutlet weak var viewJulia: Julia!
     
     // MARK: - view controller life cycle
     override func viewDidLoad() {
@@ -37,7 +37,6 @@ class JuliaScreen: UIViewController {
     @IBAction func removeGamePadClick(_ sender: Any) {
         viewGamePad.alpha = 0.0
     }
-    
     
     // MARK: - other methods
     func rotationSwichChanged() {

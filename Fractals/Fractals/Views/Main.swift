@@ -12,6 +12,7 @@ class Main: UIViewController {
     // MARK: - props
     @IBOutlet weak var btnMandelbrot: MRButton!
     @IBOutlet weak var btnJulia: MRButton!
+    @IBOutlet weak var btnTree: MRButton!
     
     // MARK: - view controller lifecycle
     override func viewDidLoad() {
@@ -19,6 +20,7 @@ class Main: UIViewController {
         
         btnMandelbrot.defaultTouchesEnabled = true
         btnJulia.defaultTouchesEnabled = true
+        btnTree.defaultTouchesEnabled = true
     }
     
     // MARK: - events
@@ -30,5 +32,10 @@ class Main: UIViewController {
     @IBAction func btnJuliaClick(_ sender: Any) {
         let julia = self.storyboard!.instantiateViewController(withIdentifier: "JuliaScreen") as! JuliaScreen
         self.navigationController!.pushViewController(julia, animated: true)
+    }
+    
+    @IBAction func btnTreeClick(_ sender: Any) {
+        let tree = self.storyboard!.instantiateViewController(withIdentifier: "TreeScreen") as! TreeScreen
+        self.navigationController!.pushViewController(tree, animated: true)
     }
 }

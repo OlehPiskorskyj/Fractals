@@ -54,9 +54,9 @@
                                                     <constraint firstAttribute="height" constant="75" id="74e-69-rTM"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <state key="normal" title="Next Fractal"/>
+                                                <state key="normal" title="Tree Fractal"/>
                                                 <connections>
-                                                    <action selector="btnJuliaClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="t2l-SS-syb"/>
+                                                    <action selector="btnTreeClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oes-3g-ZAB"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -98,6 +98,7 @@
                     <connections>
                         <outlet property="btnJulia" destination="4Uz-Mc-Xm6" id="Eyk-T7-SMS"/>
                         <outlet property="btnMandelbrot" destination="2nI-Z7-uFR" id="ciw-Vd-fc4"/>
+                        <outlet property="btnTree" destination="gZF-Bi-N4z" id="ZBK-sK-JCd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -193,6 +194,44 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iTO-eg-tvd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2817" y="67"/>
+        </scene>
+        <!--Tree Screen-->
+        <scene sceneID="uIR-YL-bn6">
+            <objects>
+                <viewController storyboardIdentifier="TreeScreen" id="7UO-p7-gBP" customClass="TreeScreen" customModule="Fractals" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="L52-LU-YXM">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mtkView contentMode="scaleToFill" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float" translatesAutoresizingMaskIntoConstraints="NO" id="g3v-dH-car" customClass="Tree" customModule="Fractals" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </mtkView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vJZ-Ti-iB6" customClass="MRGamePad" customModule="Fractals" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="tFJ-Gp-kCb"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="g3v-dH-car" secondAttribute="bottom" id="486-nA-2ql"/>
+                            <constraint firstItem="g3v-dH-car" firstAttribute="top" secondItem="L52-LU-YXM" secondAttribute="top" id="DgT-io-7Fk"/>
+                            <constraint firstItem="vJZ-Ti-iB6" firstAttribute="leading" secondItem="tFJ-Gp-kCb" secondAttribute="leading" id="gPD-Xc-KJj"/>
+                            <constraint firstItem="tFJ-Gp-kCb" firstAttribute="bottom" secondItem="vJZ-Ti-iB6" secondAttribute="bottom" id="goE-wg-dgM"/>
+                            <constraint firstItem="g3v-dH-car" firstAttribute="leading" secondItem="L52-LU-YXM" secondAttribute="leading" id="jdf-cx-DTX"/>
+                            <constraint firstItem="tFJ-Gp-kCb" firstAttribute="trailing" secondItem="vJZ-Ti-iB6" secondAttribute="trailing" id="lB6-hS-qzu"/>
+                            <constraint firstItem="vJZ-Ti-iB6" firstAttribute="top" secondItem="tFJ-Gp-kCb" secondAttribute="top" id="lry-c1-3lz"/>
+                            <constraint firstAttribute="trailing" secondItem="g3v-dH-car" secondAttribute="trailing" id="nmR-bc-6kw"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="viewGamePad" destination="vJZ-Ti-iB6" id="hY6-cG-NJH"/>
+                        <outlet property="viewTree" destination="g3v-dH-car" id="9L3-qb-bVb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9eb-tu-4WP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3745" y="67"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="c1p-uO-XKh">
