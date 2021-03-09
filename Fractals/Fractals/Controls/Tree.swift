@@ -19,15 +19,12 @@ class Tree: BaseMetalView {
     }
     
     // MARK: - props
+    public var imageData: UIImage? = nil
+    
     private var fractalZoom: Float = 0.0
-    private var moveX: Float = 0.0
-    private var moveY: Float = 0.0
     private var zx: Float = 0.0
     private var zy: Float = 0.0
-    private var cx: Float = 0.0
-    private var cy: Float = 0.0
     private var tmp: Float = 0.0
-    private var iterationsCount: Int = 0
     
     // MARK: - ctors
     override public init(frame frameRect: CGRect, device: MTLDevice?) {
@@ -45,25 +42,38 @@ class Tree: BaseMetalView {
     }
     
     // MARK: - utility methods
-    func addColor2Vertex(vertex: inout Vertex, n: Int) {
-        var color = simd_float3.zero
-        if (n < 30) {
-            color.x = 1.0
-            color.y = 0.0
-            color.z = 0.0
-        } else if (n > iterationsCount - 12) {
-            //color = simd_float3.zero
-        } else {
-            let c = Float((n * n + n) % 256)
-            color.x = 0.0
-            color.y = c / 255.0 - 0.3
-            color.z = 0.0
+    public func pixelHeight(image: UIImage, positionX: Int, positionY: Int) -> Int {
+        var returnValue = 0
+        guard let cgImage = image.cgImage else { return returnValue }
+        let provider = cgImage.dataProvider
+        let providerData = provider!.data
+        if let data = CFDataGetBytePtr(providerData) {
+            let bytesPerPixel = cgImage.bitsPerPixel / cgImage.bitsPerComponent
+            let offset = (positionY * cgImage.bytesPerRow) + (positionX * bytesPerPixel)
+            returnValue = Int(data[offset])
         }
-        
-        vertex.r = color.x
-        vertex.g = color.y
-        vertex.b = color.z
+        return returnValue
     }
+    
+    private func image(with path: UIBezierPath, size: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { _ in
+            UIColor.white.setStroke()
+            //UIColor.blue.setStroke()
+            path.lineWidth = 2
+            path.stroke()
+        }
+    }
+    
+    func createBeizePath() -> UIBezierPath
+    {
+        let path = UIBezierPath()
+        //Rectangle path Trace
+        path.move(to: CGPoint(x: 20, y: 100) )
+        path.addLine(to: CGPoint(x: 50 , y: 100))
+        path.addLine(to: CGPoint(x: 50, y: 150))
+        path.addLine(to: CGPoint(x: 20, y: 150))
+        return path
+      }
     
     // MARK: - fractal logic
     func createJulia() {
@@ -72,30 +82,107 @@ class Tree: BaseMetalView {
         indexCount = 0
 
         fractalZoom = 1.0
-        moveX = 0.0
-        moveY = 0.0
-        cx = -0.7
-        cy = 0.27015
-        iterationsCount = 255
         
+        let imageRendererFormat = UIGraphicsImageRendererFormat()
+        imageRendererFormat.scale = 1
+        
+        let imageRenderer = UIGraphicsImageRenderer(size: CGSize(width: 300, height: 300), format: imageRendererFormat)
+        let image = imageRenderer.image { ctx in
+            /*
+            let rectangle = CGRect(x: 20, y: 20, width: 50, height: 50)
+
+            ctx.cgContext.setFillColor(UIColor.white.cgColor)
+            ctx.cgContext.setStrokeColor(UIColor.black.cgColor)
+            ctx.cgContext.setLineWidth(2)
+            
+            ctx.cgContext.addRect(rectangle)
+            ctx.cgContext.drawPath(using: .fillStroke)
+            */
+            
+            ctx.cgContext.setStrokeColor(UIColor.white.cgColor)
+            
+            //let bezier = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 300, height: 300))
+            let bezier = UIBezierPath()
+            var angleInRadians: CGFloat = -CGFloat.pi / 4
+            let length: CGFloat = 100
+            //bezier.move(to: .zero)
+            
+            //bezier.addLine(to: CGPoint(x: 0, y: 1))
+            //bezier.apply(.init(rotationAngle: angleInRadians))
+            //bezier.apply(.init(scaleX: length, y: length))
+            
+            var x: CGFloat = 100.0
+            var y: CGFloat = 0.0
+            
+            bezier.move(to: CGPoint(x: x, y: y))
+            //bezier.addLine(to: CGPoint(x: 100, y: 100))
+            //bezier.addLine(to: CGPoint(x: 125, y: 125))
+            
+            x += -sin(angleInRadians) * length
+            y += cos(angleInRadians) * length
+            
+            bezier.addLine(to: CGPoint(x: x, y: y))
+            
+            angleInRadians = 2 * CGFloat.pi
+            
+            x += -sin(angleInRadians) * length
+            y += cos(angleInRadians) * length
+            
+            bezier.addLine(to: CGPoint(x: x, y: y))
+            
+            bezier.lineWidth = 3.0
+            bezier.lineJoinStyle = .bevel
+            bezier.stroke()
+            ctx.cgContext.addPath(bezier.cgPath)
+            
+            /*
+            let angleInRadians: CGFloat = CGFloat.pi / 2
+            let length: CGFloat = 50
+            ctx.cgContext.setLineWidth(2)
+            ctx.cgContext.beginPath()
+            ctx.cgContext.move(to: CGPoint.init(x: 100, y:0))
+            ctx.cgContext.addLine(to: CGPoint.init(x: 100, y: 100))
+            ctx.cgContext.addLine(to: CGPoint(x: -sin(angleInRadians) * length, y: cos(angleInRadians) * length))
+            //ctx.cgContext.closePath()
+            
+            //ctx.cgContext.setFillColor(UIColor.white.cgColor)
+            ctx.cgContext.setStrokeColor(UIColor.white.cgColor)
+            ctx.cgContext.drawPath(using: CGPathDrawingMode.stroke)
+            */
+            
+            /*
+            UIColor.blue.setStroke()
+            
+            let path = UIBezierPath()
+            path.lineWidth = 2
+            path.stroke()
+            
+            let angleInRadians: CGFloat = 3.14
+            let length: CGFloat = 50
+            path.move(to: .zero)
+            path.addLine(to: CGPoint(x: 0, y: 1))
+            path.apply(.init(rotationAngle: angleInRadians))
+            path.apply(.init(scaleX: length, y: length))
+            */
+            
+        }
+        
+        self.imageData = image
+
         let delta = 1.0 / Float(Consts.FRACTAL_SIZE)
         
         for x in 0..<Consts.FRACTAL_SIZE {
             for y in 0..<Consts.FRACTAL_SIZE {
                 
-                let v1m = self.julia(x: x, y: y + 1)
-                let v2m = self.julia(x: x, y: y)
-                let v3m = self.julia(x: x + 1, y: y + 1)
-                let v4m = self.julia(x: x + 1, y: y)
+                let v1m = self.tree(x: x, y: y + 1)
+                let v2m = self.tree(x: x, y: y)
+                let v3m = self.tree(x: x + 1, y: y + 1)
+                let v4m = self.tree(x: x + 1, y: y)
                 
-                var v1 = Vertex(x: Float(x) * delta, y: Float(v1m) / 255.0, z: Float(y + 1) * delta, r: 1.0, g: 0.0, b: 0.0)
-                self.addColor2Vertex(vertex: &v1, n: v1m)
-                var v2 = Vertex(x: Float(x) * delta, y: Float(v2m) / 255.0, z: Float(y) * delta, r: 1.0, g: 0.0, b: 0.0)
-                self.addColor2Vertex(vertex: &v2, n: v2m)
-                var v3 = Vertex(x: Float(x + 1) * delta, y: Float(v3m) / 255.0, z: Float(y + 1) * delta, r: 1.0, g: 0.0, b: 0.0)
-                self.addColor2Vertex(vertex: &v3, n: v3m)
-                var v4 = Vertex(x: Float(x + 1) * delta, y: Float(v4m) / 255.0, z: Float(y) * delta, r: 1.0, g: 0.0, b: 0.0)
-                self.addColor2Vertex(vertex: &v4, n: v4m)
+                var v1 = Vertex(x: Float(x) * delta, y: Float(v1m) / 255.0, z: Float(y + 1) * delta, r: 0.0, g: 0.4, b: 0.0)
+                var v2 = Vertex(x: Float(x) * delta, y: Float(v2m) / 255.0, z: Float(y) * delta, r: 0.0, g: 0.4, b: 0.0)
+                var v3 = Vertex(x: Float(x + 1) * delta, y: Float(v3m) / 255.0, z: Float(y + 1) * delta, r: 0.0, g: 0.4, b: 0.0)
+                var v4 = Vertex(x: Float(x + 1) * delta, y: Float(v4m) / 255.0, z: Float(y) * delta, r: 0.0, g: 0.4, b: 0.0)
                 
                 var index1 = vertexCount
                 var index2 = vertexCount + 1
@@ -129,38 +216,10 @@ class Tree: BaseMetalView {
         }
     }
 
-    func julia(x: Int, y: Int) -> Int {
-        zx = 1.5 * Float(x - Consts.FRACTAL_SIZE / 2) / (0.5 * fractalZoom * Float(Consts.FRACTAL_SIZE)) + moveX
-        zy = 1.0 * Float(y - Consts.FRACTAL_SIZE / 2) / (0.5 * fractalZoom * Float(Consts.FRACTAL_SIZE)) + moveY
-        
-        var i = iterationsCount
-        while (i > 1) {
-            if ((zx * zx + zy * zy) > 4.0) {
-                break
-            }
-            
-            tmp = zx * zx - zy * zy + cx
-            zy = 2.0 * zx * zy + cy
-            zx = tmp
-            i -= 1
-        }
-        
-        /*
-        var i = 0
-        while (i < iterationsCount) {
-            i += 1
-            
-            tmp = zx * zx - zy * zy + cx
-            zy = 2.0 * zx * zy + cy
-            zx = tmp
-            
-            if ((zx * zx + zy * zy) > 4.0) {
-                break
-            }
-        }
-        */
-        
-        return i
+    func tree(x: Int, y: Int) -> Int {
+        guard let imageData = self.imageData else { return 0 }
+        let height = self.pixelHeight(image: imageData, positionX: x, positionY: y)
+        return height
     }
 
     // MARK: - other methods

@@ -12,6 +12,7 @@ class TreeScreen: UIViewController {
     // MARK: - props
     @IBOutlet weak var viewGamePad: MRGamePad!
     @IBOutlet weak var viewTree: Tree!
+    @IBOutlet weak var imgTemp: UIImageView!
     
     // MARK: - view controller life cycle
     override func viewDidLoad() {
@@ -32,6 +33,8 @@ class TreeScreen: UIViewController {
         viewGamePad.rotationChandeAction = { [weak self] in
             self?.rotationSwichChanged()
         }
+        
+        self.imgTemp.image = viewTree.imageData
     }
     
     // MARK: - other methods
