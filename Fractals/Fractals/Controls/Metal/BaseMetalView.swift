@@ -21,6 +21,10 @@ struct Vertex {
     }
 }
 
+func +(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+    return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+}
+
 struct SceneMatrices {
     var projection: GLKMatrix4 = GLKMatrix4Identity
     var modelview: GLKMatrix4 = GLKMatrix4Identity

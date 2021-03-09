@@ -26,8 +26,11 @@ class Tree: BaseMetalView {
     //private var zy: Float = 0.0
     private var tmp: Float = 0.0
     
-    var x: CGFloat = 300.0
-    var y: CGFloat = 0.0
+    var leftPosition = CGPoint(x: 50.0, y: 0.0)
+    var leftX: CGFloat = 50.0
+    var leftY: CGFloat = 0.0
+    var rightX: CGFloat = 50.0
+    var rightY: CGFloat = 0.0
     
     // MARK: - ctors
     override public init(frame frameRect: CGRect, device: MTLDevice?) {
@@ -58,24 +61,24 @@ class Tree: BaseMetalView {
         return returnValue
     }
     
-    func addBrunch(length: CGFloat, angle: Double, path: inout UIBezierPath) {
+    func addBrunch(length: CGFloat, angle: Double) -> CGPoint {
+        var returnValue = CGPoint.zero
         var preparedAngle = angle
         var flag = false
         if (angle > 90.0) {
             preparedAngle = angle - 90.0
             flag = true
         }
+        
         let radAngle = CGFloat(self.deg2rad(preparedAngle))
-        print("\(angle) \(radAngle)")
         if (!flag) {
-            x += -sin(radAngle) * length
-            y += cos(radAngle) * length
+            returnValue.x = -sin(radAngle) * length
+            returnValue.y = cos(radAngle) * length
         } else {
-            x += -cos(radAngle) * length
-            y += -sin(radAngle) * length
-            
+            returnValue.x = -cos(radAngle) * length
+            returnValue.y = -sin(radAngle) * length
         }
-        path.addLine(to: CGPoint(x: x, y: y))
+        return returnValue
     }
     
     func deg2rad(_ number: Double) -> Double {
@@ -108,8 +111,7 @@ class Tree: BaseMetalView {
             
             ctx.cgContext.setStrokeColor(UIColor.white.cgColor)
             
-            //let bezier = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 300, height: 300))
-            var bezier = UIBezierPath()
+            let bezier = UIBezierPath()
             var angle = 0.0
             var length: CGFloat = 60
             
@@ -120,16 +122,16 @@ class Tree: BaseMetalView {
             bezier.apply(.init(scaleX: length, y: length))
             */
             
-            bezier.move(to: CGPoint(x: x, y: y))
-            self.addBrunch(length: length, angle: angle, path: &bezier)
+            bezier.move(to: CGPoint(x: leftX, y: leftY))
+            leftPosition = leftPosition + self.addBrunch(length: length, angle: angle)
+            bezier.addLine(to: leftPosition)
             
             while (length > 0) {
-                angle += 20.0
-                length -= 4
-                //angle = 3 * CGFloat.pi / 2
-                self.addBrunch(length: length, angle: angle, path: &bezier)
+                angle -= 18.0
+                length -= 6
+                leftPosition = leftPosition + self.addBrunch(length: length, angle: angle)
+                bezier.addLine(to: leftPosition)
             }
-            
             
             bezier.lineWidth = 3.0
             bezier.lineJoinStyle = .bevel
