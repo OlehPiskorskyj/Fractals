@@ -211,7 +211,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CEq-0b-Teg">
-                                <rect key="frame" x="266" y="714" width="128" height="128"/>
+                                <rect key="frame" x="20" y="64" width="128" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="0b5-4l-wdW"/>
                                     <constraint firstAttribute="width" constant="128" id="UbL-o5-EXO"/>
@@ -222,9 +222,9 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="g3v-dH-car" secondAttribute="bottom" id="486-nA-2ql"/>
-                            <constraint firstItem="tFJ-Gp-kCb" firstAttribute="bottom" secondItem="CEq-0b-Teg" secondAttribute="bottom" constant="20" id="5TZ-dI-9TG"/>
                             <constraint firstItem="g3v-dH-car" firstAttribute="top" secondItem="L52-LU-YXM" secondAttribute="top" id="DgT-io-7Fk"/>
-                            <constraint firstItem="tFJ-Gp-kCb" firstAttribute="trailing" secondItem="CEq-0b-Teg" secondAttribute="trailing" constant="20" id="M3c-oP-mxU"/>
+                            <constraint firstItem="CEq-0b-Teg" firstAttribute="top" secondItem="tFJ-Gp-kCb" secondAttribute="top" constant="20" id="Ekr-ch-sU7"/>
+                            <constraint firstItem="CEq-0b-Teg" firstAttribute="leading" secondItem="tFJ-Gp-kCb" secondAttribute="leading" constant="20" id="MMv-cW-ddY"/>
                             <constraint firstItem="vJZ-Ti-iB6" firstAttribute="leading" secondItem="tFJ-Gp-kCb" secondAttribute="leading" id="gPD-Xc-KJj"/>
                             <constraint firstItem="tFJ-Gp-kCb" firstAttribute="bottom" secondItem="vJZ-Ti-iB6" secondAttribute="bottom" id="goE-wg-dgM"/>
                             <constraint firstItem="g3v-dH-car" firstAttribute="leading" secondItem="L52-LU-YXM" secondAttribute="leading" id="jdf-cx-DTX"/>

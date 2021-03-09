@@ -22,9 +22,12 @@ class Tree: BaseMetalView {
     public var imageData: UIImage? = nil
     
     private var fractalZoom: Float = 0.0
-    private var zx: Float = 0.0
-    private var zy: Float = 0.0
+    //private var zx: Float = 0.0
+    //private var zy: Float = 0.0
     private var tmp: Float = 0.0
+    
+    var x: CGFloat = 300.0
+    var y: CGFloat = 0.0
     
     // MARK: - ctors
     override public init(frame frameRect: CGRect, device: MTLDevice?) {
@@ -42,7 +45,7 @@ class Tree: BaseMetalView {
     }
     
     // MARK: - utility methods
-    public func pixelHeight(image: UIImage, positionX: Int, positionY: Int) -> Int {
+    func pixelHeight(image: UIImage, positionX: Int, positionY: Int) -> Int {
         var returnValue = 0
         guard let cgImage = image.cgImage else { return returnValue }
         let provider = cgImage.dataProvider
@@ -55,25 +58,29 @@ class Tree: BaseMetalView {
         return returnValue
     }
     
-    private func image(with path: UIBezierPath, size: CGSize) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { _ in
-            UIColor.white.setStroke()
-            //UIColor.blue.setStroke()
-            path.lineWidth = 2
-            path.stroke()
+    func addBrunch(length: CGFloat, angle: Double, path: inout UIBezierPath) {
+        var preparedAngle = angle
+        var flag = false
+        if (angle > 90.0) {
+            preparedAngle = angle - 90.0
+            flag = true
         }
+        let radAngle = CGFloat(self.deg2rad(preparedAngle))
+        print("\(angle) \(radAngle)")
+        if (!flag) {
+            x += -sin(radAngle) * length
+            y += cos(radAngle) * length
+        } else {
+            x += -cos(radAngle) * length
+            y += -sin(radAngle) * length
+            
+        }
+        path.addLine(to: CGPoint(x: x, y: y))
     }
     
-    func createBeizePath() -> UIBezierPath
-    {
-        let path = UIBezierPath()
-        //Rectangle path Trace
-        path.move(to: CGPoint(x: 20, y: 100) )
-        path.addLine(to: CGPoint(x: 50 , y: 100))
-        path.addLine(to: CGPoint(x: 50, y: 150))
-        path.addLine(to: CGPoint(x: 20, y: 150))
-        return path
-      }
+    func deg2rad(_ number: Double) -> Double {
+        return number * .pi / 180
+    }
     
     // MARK: - fractal logic
     func createJulia() {
@@ -102,33 +109,27 @@ class Tree: BaseMetalView {
             ctx.cgContext.setStrokeColor(UIColor.white.cgColor)
             
             //let bezier = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 300, height: 300))
-            let bezier = UIBezierPath()
-            var angleInRadians: CGFloat = -CGFloat.pi / 4
-            let length: CGFloat = 100
-            //bezier.move(to: .zero)
+            var bezier = UIBezierPath()
+            var angle = 0.0
+            var length: CGFloat = 60
             
-            //bezier.addLine(to: CGPoint(x: 0, y: 1))
-            //bezier.apply(.init(rotationAngle: angleInRadians))
-            //bezier.apply(.init(scaleX: length, y: length))
-            
-            var x: CGFloat = 100.0
-            var y: CGFloat = 0.0
+            /*
+            bezier.move(to: .zero)
+            bezier.addLine(to: CGPoint(x: 0, y: 1))
+            bezier.apply(.init(rotationAngle: 0.0))
+            bezier.apply(.init(scaleX: length, y: length))
+            */
             
             bezier.move(to: CGPoint(x: x, y: y))
-            //bezier.addLine(to: CGPoint(x: 100, y: 100))
-            //bezier.addLine(to: CGPoint(x: 125, y: 125))
+            self.addBrunch(length: length, angle: angle, path: &bezier)
             
-            x += -sin(angleInRadians) * length
-            y += cos(angleInRadians) * length
+            while (length > 0) {
+                angle += 20.0
+                length -= 4
+                //angle = 3 * CGFloat.pi / 2
+                self.addBrunch(length: length, angle: angle, path: &bezier)
+            }
             
-            bezier.addLine(to: CGPoint(x: x, y: y))
-            
-            angleInRadians = 2 * CGFloat.pi
-            
-            x += -sin(angleInRadians) * length
-            y += cos(angleInRadians) * length
-            
-            bezier.addLine(to: CGPoint(x: x, y: y))
             
             bezier.lineWidth = 3.0
             bezier.lineJoinStyle = .bevel
