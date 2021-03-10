@@ -39,16 +39,22 @@ class Tree: BaseMetalView {
     // MARK: - utility methods
     func addColor2Vertex(vertex: inout Vertex, n: Int) {
         var color = simd_float3.zero
-        if (n < 30) {
-            color.x = 1.0
-            color.y = 0.0
+        if (n == 255) {
+            color.x = 0.2
+            color.y = 1.0
             color.z = 0.0
-        } else if (n > 255 - 12) {
+        } else if (n < 12) {
             //color = simd_float3.zero
         } else {
+            /* alternative color logic
+            int color = (int)(n * logf(n)) % 256;
+            int color = (int)(n * sinf(n)) % 256;
+            int color = n % 256;
+            */
+            
             let c = Float((n * n + n) % 256)
-            color.x = 0.0
-            color.y = c / 255.0 - 0.3
+            color.x = c / 255.0 + 0.3
+            color.y = c / 255.0 + 0.3
             color.z = 0.0
         }
         
@@ -57,14 +63,14 @@ class Tree: BaseMetalView {
         vertex.b = color.z
     }
     
-    func pixelHeight(image: UIImage, positionX: Int, positionY: Int) -> Int {
+    func pixelHeight(image: UIImage, x: Int, y: Int) -> Int {
         var returnValue = 0
         guard let cgImage = image.cgImage else { return returnValue }
         let provider = cgImage.dataProvider
         let providerData = provider!.data
         if let data = CFDataGetBytePtr(providerData) {
             let bytesPerPixel = cgImage.bitsPerPixel / cgImage.bitsPerComponent
-            let offset = (positionY * cgImage.bytesPerRow) + (positionX * bytesPerPixel)
+            let offset = (y * cgImage.bytesPerRow) + (x * bytesPerPixel)
             returnValue = Int(data[offset])
         }
         return returnValue
@@ -119,9 +125,9 @@ class Tree: BaseMetalView {
             var bezier = UIBezierPath()
             let startPosition = CGPoint(x: 150.0, y: 0.0)
             bezier.move(to: startPosition)
-            self.createBrunches(start: startPosition, length: 60, angle: 0.0, path: &bezier)
+            self.createBrunches(start: startPosition, length: 50, angle: 0.0, path: &bezier)
             
-            bezier.lineWidth = 3.0
+            bezier.lineWidth = 4.0
             bezier.lineJoinStyle = .bevel
             bezier.stroke()
             ctx.cgContext.addPath(bezier.cgPath)
@@ -132,6 +138,8 @@ class Tree: BaseMetalView {
     }
     
     func create3DShape() {
+        guard let imageData = self.imageData else { return }
+        
         angle = Float.pi
         vertexCount = 0
         indexCount = 0
@@ -140,10 +148,10 @@ class Tree: BaseMetalView {
         for x in 0..<Consts.FRACTAL_SIZE {
             for y in 0..<Consts.FRACTAL_SIZE {
                 
-                let v1m = self.tree(x: x, y: y + 1)
-                let v2m = self.tree(x: x, y: y)
-                let v3m = self.tree(x: x + 1, y: y + 1)
-                let v4m = self.tree(x: x + 1, y: y)
+                let v1m = self.pixelHeight(image: imageData, x: x, y: y + 1)
+                let v2m = self.pixelHeight(image: imageData, x: x, y: y)
+                let v3m = self.pixelHeight(image: imageData, x: x + 1, y: y + 1)
+                let v4m = self.pixelHeight(image: imageData, x: x + 1, y: y)
                 
                 var v1 = Vertex(x: Float(x) * delta, y: Float(v1m) / 255.0, z: Float(y + 1) * delta, r: 0.0, g: 0.4, b: 0.0)
                 self.addColor2Vertex(vertex: &v1, n: v1m)
@@ -186,12 +194,6 @@ class Tree: BaseMetalView {
         }
     }
 
-    func tree(x: Int, y: Int) -> Int {
-        guard let imageData = self.imageData else { return 0 }
-        let height = self.pixelHeight(image: imageData, positionX: x, positionY: y)
-        return height
-    }
-
     // MARK: - other methods
     override func internalInit() {
         maxVertexCount = Consts.FRACTAL_MAX_VERTICES
@@ -221,7 +223,7 @@ extension Tree: MTKViewDelegate {
         guard let commandBuffer = commandQueue.makeCommandBuffer() else { return }
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
         
-        lookAt = GLKMatrix4MakeLookAt(0.0, 2.0 - self.zoom, 4.0 - self.zoom, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        lookAt = GLKMatrix4MakeLookAt(0.0, 4.0 - self.zoom, 2.0 - self.zoom, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
         
         var modelView = GLKMatrix4Multiply(GLKMatrix4MakeScale(10.0, 1.0, 10.0), GLKMatrix4MakeRotation(angle, 0.0, 1.0, 0.0))
         modelView = GLKMatrix4Multiply(modelView, GLKMatrix4MakeTranslation(-0.5, 0.0, -0.5))
