@@ -21,11 +21,6 @@ class Tree: BaseMetalView {
     // MARK: - props
     public var imageData: UIImage? = nil
     
-    private var fractalZoom: Float = 0.0
-    private var tmp: Float = 0.0
-    
-    var startPosition = CGPoint(x: 150.0, y: 0.0)
-    
     // MARK: - ctors
     override public init(frame frameRect: CGRect, device: MTLDevice?) {
         super.init(frame: frameRect, device: device)
@@ -113,96 +108,27 @@ class Tree: BaseMetalView {
     }
     
     // MARK: - fractal logic
-    func createJulia() {
-        angle = Float.pi / 2.0
+    func createTree() {
+        angle = Float.pi
         vertexCount = 0
         indexCount = 0
-
-        fractalZoom = 1.0
         
         let imageRendererFormat = UIGraphicsImageRendererFormat()
         imageRendererFormat.scale = 1
         
         let imageRenderer = UIGraphicsImageRenderer(size: CGSize(width: 300, height: 300), format: imageRendererFormat)
         let image = imageRenderer.image { ctx in
-            /*
-            let rectangle = CGRect(x: 20, y: 20, width: 50, height: 50)
-
-            ctx.cgContext.setFillColor(UIColor.white.cgColor)
-            ctx.cgContext.setStrokeColor(UIColor.black.cgColor)
-            ctx.cgContext.setLineWidth(2)
-            
-            ctx.cgContext.addRect(rectangle)
-            ctx.cgContext.drawPath(using: .fillStroke)
-            */
-            
             ctx.cgContext.setStrokeColor(UIColor.white.cgColor)
             
             var bezier = UIBezierPath()
-            var length: CGFloat = 60
-            
-            /*
-            bezier.move(to: .zero)
-            bezier.addLine(to: CGPoint(x: 0, y: 1))
-            bezier.apply(.init(rotationAngle: 0.0))
-            bezier.apply(.init(scaleX: length, y: length))
-            */
-            
+            let startPosition = CGPoint(x: 150.0, y: 0.0)
             bezier.move(to: startPosition)
-            //positionRight = positionRight + self.addBrunch(length: length, angle: angleRight)
-            //positionLeft = positionRight
-            //bezier.addLine(to: positionRight)
-            
-            self.createTree(start: startPosition, length: length, angle: 0.0, path: &bezier)
-            
-            /*
-            while (length > 0) {
-                angleRight += 18.0
-                angleLeft -= 18.0
-                length -= 6
-                //positionRight = positionRight + self.addBrunch(length: length, angle: angleRight)
-                //bezier.addLine(to: positionRight)
-                //bezier.move(to: positionLeft)
-                positionLeft = positionLeft + self.addBrunch(length: length, angle: angleLeft)
-                bezier.addLine(to: positionLeft)
-            }
-            */
+            self.createTree(start: startPosition, length: 60, angle: 0.0, path: &bezier)
             
             bezier.lineWidth = 3.0
             bezier.lineJoinStyle = .bevel
             bezier.stroke()
             ctx.cgContext.addPath(bezier.cgPath)
-            
-            /*
-            let angleInRadians: CGFloat = CGFloat.pi / 2
-            let length: CGFloat = 50
-            ctx.cgContext.setLineWidth(2)
-            ctx.cgContext.beginPath()
-            ctx.cgContext.move(to: CGPoint.init(x: 100, y:0))
-            ctx.cgContext.addLine(to: CGPoint.init(x: 100, y: 100))
-            ctx.cgContext.addLine(to: CGPoint(x: -sin(angleInRadians) * length, y: cos(angleInRadians) * length))
-            //ctx.cgContext.closePath()
-            
-            //ctx.cgContext.setFillColor(UIColor.white.cgColor)
-            ctx.cgContext.setStrokeColor(UIColor.white.cgColor)
-            ctx.cgContext.drawPath(using: CGPathDrawingMode.stroke)
-            */
-            
-            /*
-            UIColor.blue.setStroke()
-            
-            let path = UIBezierPath()
-            path.lineWidth = 2
-            path.stroke()
-            
-            let angleInRadians: CGFloat = 3.14
-            let length: CGFloat = 50
-            path.move(to: .zero)
-            path.addLine(to: CGPoint(x: 0, y: 1))
-            path.apply(.init(rotationAngle: angleInRadians))
-            path.apply(.init(scaleX: length, y: length))
-            */
-            
         }
         
         self.imageData = image
@@ -273,7 +199,7 @@ class Tree: BaseMetalView {
         self.delegate = self
         
         DispatchQueue.global().async {
-            self.createJulia()
+            self.createTree()
         }
     }
 }
