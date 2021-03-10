@@ -33,9 +33,13 @@ class TreeScreen: UIViewController {
         viewGamePad.rotationChandeAction = { [weak self] in
             self?.rotationSwichChanged()
         }
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.imgTemp.image = viewTree.imageData
     }
+    
     
     // MARK: - other methods
     func rotationSwichChanged() {

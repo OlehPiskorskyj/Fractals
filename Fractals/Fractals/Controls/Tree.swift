@@ -22,15 +22,9 @@ class Tree: BaseMetalView {
     public var imageData: UIImage? = nil
     
     private var fractalZoom: Float = 0.0
-    //private var zx: Float = 0.0
-    //private var zy: Float = 0.0
     private var tmp: Float = 0.0
     
-    var leftPosition = CGPoint(x: 50.0, y: 0.0)
-    var leftX: CGFloat = 50.0
-    var leftY: CGFloat = 0.0
-    var rightX: CGFloat = 50.0
-    var rightY: CGFloat = 0.0
+    var startPosition = CGPoint(x: 150.0, y: 0.0)
     
     // MARK: - ctors
     override public init(frame frameRect: CGRect, device: MTLDevice?) {
@@ -48,6 +42,26 @@ class Tree: BaseMetalView {
     }
     
     // MARK: - utility methods
+    func addColor2Vertex(vertex: inout Vertex, n: Int) {
+        var color = simd_float3.zero
+        if (n < 30) {
+            color.x = 1.0
+            color.y = 0.0
+            color.z = 0.0
+        } else if (n > 255 - 12) {
+            //color = simd_float3.zero
+        } else {
+            let c = Float((n * n + n) % 256)
+            color.x = 0.0
+            color.y = c / 255.0 - 0.3
+            color.z = 0.0
+        }
+        
+        vertex.r = color.x
+        vertex.g = color.y
+        vertex.b = color.z
+    }
+    
     func pixelHeight(image: UIImage, positionX: Int, positionY: Int) -> Int {
         var returnValue = 0
         guard let cgImage = image.cgImage else { return returnValue }
@@ -85,6 +99,19 @@ class Tree: BaseMetalView {
         return number * .pi / 180
     }
     
+    func createTree(start: CGPoint, length: CGFloat, angle: Double, path: inout UIBezierPath) {
+        let newPosition = start + self.addBrunch(length: length, angle: angle)
+        path.addLine(to: newPosition)
+        
+        if (length > 4) {
+            self.createTree(start: newPosition, length: length - 6, angle: angle + 18.0, path: &path)
+            path.move(to: newPosition)
+            
+            self.createTree(start: newPosition, length: length - 6, angle: angle - 18.0, path: &path)
+            path.move(to: newPosition)
+        }
+    }
+    
     // MARK: - fractal logic
     func createJulia() {
         angle = Float.pi / 2.0
@@ -111,8 +138,7 @@ class Tree: BaseMetalView {
             
             ctx.cgContext.setStrokeColor(UIColor.white.cgColor)
             
-            let bezier = UIBezierPath()
-            var angle = 0.0
+            var bezier = UIBezierPath()
             var length: CGFloat = 60
             
             /*
@@ -122,16 +148,25 @@ class Tree: BaseMetalView {
             bezier.apply(.init(scaleX: length, y: length))
             */
             
-            bezier.move(to: CGPoint(x: leftX, y: leftY))
-            leftPosition = leftPosition + self.addBrunch(length: length, angle: angle)
-            bezier.addLine(to: leftPosition)
+            bezier.move(to: startPosition)
+            //positionRight = positionRight + self.addBrunch(length: length, angle: angleRight)
+            //positionLeft = positionRight
+            //bezier.addLine(to: positionRight)
             
+            self.createTree(start: startPosition, length: length, angle: 0.0, path: &bezier)
+            
+            /*
             while (length > 0) {
-                angle -= 18.0
+                angleRight += 18.0
+                angleLeft -= 18.0
                 length -= 6
-                leftPosition = leftPosition + self.addBrunch(length: length, angle: angle)
-                bezier.addLine(to: leftPosition)
+                //positionRight = positionRight + self.addBrunch(length: length, angle: angleRight)
+                //bezier.addLine(to: positionRight)
+                //bezier.move(to: positionLeft)
+                positionLeft = positionLeft + self.addBrunch(length: length, angle: angleLeft)
+                bezier.addLine(to: positionLeft)
             }
+            */
             
             bezier.lineWidth = 3.0
             bezier.lineJoinStyle = .bevel
@@ -183,9 +218,13 @@ class Tree: BaseMetalView {
                 let v4m = self.tree(x: x + 1, y: y)
                 
                 var v1 = Vertex(x: Float(x) * delta, y: Float(v1m) / 255.0, z: Float(y + 1) * delta, r: 0.0, g: 0.4, b: 0.0)
+                self.addColor2Vertex(vertex: &v1, n: v1m)
                 var v2 = Vertex(x: Float(x) * delta, y: Float(v2m) / 255.0, z: Float(y) * delta, r: 0.0, g: 0.4, b: 0.0)
+                self.addColor2Vertex(vertex: &v2, n: v2m)
                 var v3 = Vertex(x: Float(x + 1) * delta, y: Float(v3m) / 255.0, z: Float(y + 1) * delta, r: 0.0, g: 0.4, b: 0.0)
+                self.addColor2Vertex(vertex: &v3, n: v3m)
                 var v4 = Vertex(x: Float(x + 1) * delta, y: Float(v4m) / 255.0, z: Float(y) * delta, r: 0.0, g: 0.4, b: 0.0)
+                self.addColor2Vertex(vertex: &v4, n: v4m)
                 
                 var index1 = vertexCount
                 var index2 = vertexCount + 1
