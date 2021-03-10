@@ -70,17 +70,21 @@ class Tree: BaseMetalView {
         return returnValue
     }
     
+    func deg2rad(_ number: Double) -> Double {
+        return number * .pi / 180
+    }
+    
     func addBrunch(length: CGFloat, angle: Double) -> CGPoint {
         var returnValue = CGPoint.zero
         var preparedAngle = angle
-        var flag = false
+        var angleChanged = false
         if (angle > 90.0) {
             preparedAngle = angle - 90.0
-            flag = true
+            angleChanged = true
         }
         
         let radAngle = CGFloat(self.deg2rad(preparedAngle))
-        if (!flag) {
+        if (!angleChanged) {
             returnValue.x = -sin(radAngle) * length
             returnValue.y = cos(radAngle) * length
         } else {
@@ -90,29 +94,21 @@ class Tree: BaseMetalView {
         return returnValue
     }
     
-    func deg2rad(_ number: Double) -> Double {
-        return number * .pi / 180
-    }
-    
-    func createTree(start: CGPoint, length: CGFloat, angle: Double, path: inout UIBezierPath) {
+    func createBrunches(start: CGPoint, length: CGFloat, angle: Double, path: inout UIBezierPath) {
         let newPosition = start + self.addBrunch(length: length, angle: angle)
         path.addLine(to: newPosition)
         
         if (length > 4) {
-            self.createTree(start: newPosition, length: length - 6, angle: angle + 18.0, path: &path)
+            self.createBrunches(start: newPosition, length: length - 6, angle: angle + 18.0, path: &path)
             path.move(to: newPosition)
             
-            self.createTree(start: newPosition, length: length - 6, angle: angle - 18.0, path: &path)
+            self.createBrunches(start: newPosition, length: length - 6, angle: angle - 18.0, path: &path)
             path.move(to: newPosition)
         }
     }
     
     // MARK: - fractal logic
-    func createTree() {
-        angle = Float.pi
-        vertexCount = 0
-        indexCount = 0
-        
+    func createTreeFractal() {
         let imageRendererFormat = UIGraphicsImageRendererFormat()
         imageRendererFormat.scale = 1
         
@@ -123,7 +119,7 @@ class Tree: BaseMetalView {
             var bezier = UIBezierPath()
             let startPosition = CGPoint(x: 150.0, y: 0.0)
             bezier.move(to: startPosition)
-            self.createTree(start: startPosition, length: 60, angle: 0.0, path: &bezier)
+            self.createBrunches(start: startPosition, length: 60, angle: 0.0, path: &bezier)
             
             bezier.lineWidth = 3.0
             bezier.lineJoinStyle = .bevel
@@ -132,9 +128,15 @@ class Tree: BaseMetalView {
         }
         
         self.imageData = image
-
-        let delta = 1.0 / Float(Consts.FRACTAL_SIZE)
+        self.create3DShape()
+    }
+    
+    func create3DShape() {
+        angle = Float.pi
+        vertexCount = 0
+        indexCount = 0
         
+        let delta = 1.0 / Float(Consts.FRACTAL_SIZE)
         for x in 0..<Consts.FRACTAL_SIZE {
             for y in 0..<Consts.FRACTAL_SIZE {
                 
@@ -199,7 +201,7 @@ class Tree: BaseMetalView {
         self.delegate = self
         
         DispatchQueue.global().async {
-            self.createTree()
+            self.createTreeFractal()
         }
     }
 }
