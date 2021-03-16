@@ -32,7 +32,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <state key="normal" title="Benoît Mandelbrot"/>
                                                 <connections>
-                                                    <action selector="btnMandelbrotClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Z5-a3-yKw"/>
+                                                    <segue destination="hu6-Wc-B0Q" kind="show" id="NB1-7M-jNq"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Uz-Mc-Xm6" customClass="MRButton" customModule="Fractals" customModuleProvider="target">
@@ -44,7 +44,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <state key="normal" title="Gaston Julia"/>
                                                 <connections>
-                                                    <action selector="btnJuliaClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sMN-yX-OUC"/>
+                                                    <segue destination="UvS-Y1-M9K" kind="show" id="gra-w7-9rF"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gZF-Bi-N4z" customClass="MRButton" customModule="Fractals" customModuleProvider="target">
@@ -56,7 +56,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <state key="normal" title="Tree Fractal"/>
                                                 <connections>
-                                                    <action selector="btnTreeClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oes-3g-ZAB"/>
+                                                    <segue destination="7UO-p7-gBP" kind="show" id="3hV-xO-4DQ"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -134,6 +134,7 @@
                             <constraint firstItem="lSc-sL-8NU" firstAttribute="bottom" secondItem="KOF-e2-uvr" secondAttribute="bottom" id="oJi-s9-0Sx"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="DRr-Nh-8ZF"/>
                     <connections>
                         <outlet property="viewGamePad" destination="KOF-e2-uvr" id="2t7-Th-UO9"/>
                         <outlet property="viewMandelbrot" destination="ZC5-Sr-emI" id="xpn-56-e4L"/>
@@ -141,7 +142,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SPh-Sz-Xfu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1917" y="67"/>
+            <point key="canvasLocation" x="1887" y="-307"/>
         </scene>
         <!--Julia Screen-->
         <scene sceneID="V7U-pd-jtK">
@@ -186,6 +187,7 @@
                             <constraint firstItem="85x-Eh-r10" firstAttribute="top" secondItem="OlU-Vj-tUK" secondAttribute="top" id="xNP-BC-eku"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="r8m-jd-sQG"/>
                     <connections>
                         <outlet property="viewGamePad" destination="Jzx-uc-GsS" id="fWz-k0-UKz"/>
                         <outlet property="viewJulia" destination="85x-Eh-r10" id="a8X-5h-1qg"/>
@@ -193,7 +195,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iTO-eg-tvd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2817" y="67"/>
+            <point key="canvasLocation" x="2857" y="67"/>
         </scene>
         <!--Tree Screen-->
         <scene sceneID="uIR-YL-bn6">
@@ -233,6 +235,7 @@
                             <constraint firstAttribute="trailing" secondItem="g3v-dH-car" secondAttribute="trailing" id="nmR-bc-6kw"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Iu8-IF-48F"/>
                     <connections>
                         <outlet property="imgTemp" destination="CEq-0b-Teg" id="XS5-6d-jTh"/>
                         <outlet property="viewGamePad" destination="vJZ-Ti-iB6" id="hY6-cG-NJH"/>
@@ -241,7 +244,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9eb-tu-4WP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3745" y="67"/>
+            <point key="canvasLocation" x="1887" y="469"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="c1p-uO-XKh">
